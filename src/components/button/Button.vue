@@ -1,16 +1,14 @@
 <template>
-  <div class="cs__home" />
+  <div />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'Button',
 });
 </script>
-<style lang="scss" scoped >
-.cs__home {
 
-}
+<style lang='scss'>
 </style>

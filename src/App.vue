@@ -1,12 +1,16 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="cs__app mx-auto px-2 py-10">
+    <img class="cs__app__logo mx-auto"
+         :src="require('@/assets/icons/frontal-frog.svg')"
+         alt="Rana"
+    >
+    <router-view />
+  </div>
 </template>
 
 <style lang="scss">
+@import '@/assets/styles/variables';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -15,16 +19,14 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.cs__app {
+  min-height: 100vh;
+  max-width: 500px;
+  background-color: $gray-light;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  &__logo {
+    width: 120px;
+    height: 120px;
   }
 }
 </style>
