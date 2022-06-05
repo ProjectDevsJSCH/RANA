@@ -1,6 +1,6 @@
 <template>
-  <div class="cs__app mx-auto px-2 pt-40 flex flex-col">
-    <img :class="[homeView ? '' : 'cs__app__logo--small', 'cs__app__logo mx-auto']"
+  <div class="cs__app mx-auto p-2 pb-16 flex flex-col">
+    <img :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto']"
          :src="require('@/assets/icons/frontal-frog.svg')"
          alt="Rana"
     >
@@ -43,10 +43,12 @@ export default defineComponent({
   &__logo {
     width: 120px;
     height: 120px;
+    transition: all 0.2s ease-in-out;
 
     &--small {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
+      transition: all 0.2s ease-in-out;
     }
   }
 }

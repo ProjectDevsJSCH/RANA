@@ -1,20 +1,18 @@
 <template>
-  <div class="cs__home flex-1 flex items-center justify-center">
-    <div>
-      <ButtonComponent
-        class="mb-4 text-center"
-        @onClick="newGame"
-      >
-        <span>Juego nuevo</span>
-      </ButtonComponent>
+  <div class="cs__home flex-1 flex items-center justify-center flex-col">
+    <ButtonComponent
+      class="mb-4 text-center"
+      @onClick="newGame"
+    >
+      <span>Juego nuevo</span>
+    </ButtonComponent>
 
-      <ButtonComponent
-        class="text-center"
-        @onClick="continueGame"
-      >
-        <span>Continuar juego</span>
-      </ButtonComponent>
-    </div>
+    <ButtonComponent
+      class="text-center"
+      @onClick="continueGame"
+    >
+      <span>Continuar juego</span>
+    </ButtonComponent>
   </div>
 </template>
 
