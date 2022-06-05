@@ -24,7 +24,7 @@ export default defineComponent({
       default: '#111d13',
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const { outline, color } = props;
 
     const composedClasses = computed(() => {
@@ -38,7 +38,7 @@ export default defineComponent({
     });
 
     const onClick = () => {
-      console.log('clicked');
+      emit('onClick');
     };
 
     return { onClick, composedClasses };
@@ -57,7 +57,7 @@ export default defineComponent({
 
   &:active  {
     transition: all 0.2s ease-in-out;
-    background-color: $green-light;
+    background-color: $green-medium;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
   }
 }
