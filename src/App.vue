@@ -1,8 +1,10 @@
 <template>
   <div class="cs__app mx-auto p-2 pb-16 flex flex-col">
-    <img :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto']"
+    <img :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
          :src="require('@/assets/icons/frontal-frog.svg')"
          alt="Rana"
+         @click="routeHome"
+         @keypress="home"
     >
     <router-view />
   </div>
@@ -10,16 +12,27 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const route = useRoute();
+    const router = useRouter();
 
     const homeView = computed(() => route.name === 'HomeView');
 
-    return { homeView };
+    const routeHome = () => {
+      router.push({ name: 'HomeView' });
+    };
+
+    const home = (event: KeyboardEvent) => {
+      if (event.key === 'h') {
+        routeHome();
+      }
+    };
+
+    return { homeView, routeHome, home };
   },
 });
 </script>

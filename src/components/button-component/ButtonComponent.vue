@@ -23,19 +23,18 @@ export default defineComponent({
       type: String,
       default: '#111d13',
     },
+    backgroundColor: {
+      type: String,
+      default: '#fff',
+    },
   },
   setup(props, { emit }) {
-    const { outline, color } = props;
+    const { outline, color, backgroundColor } = props;
 
-    const composedClasses = computed(() => {
-      if (outline) {
-        return {
-          border: `2px solid ${color}`,
-        };
-      }
-
-      return {};
-    });
+    const composedClasses = computed(() => ({
+      border: outline ? `2px solid ${color}` : 'none',
+      'background-color': backgroundColor || 'none',
+    }));
 
     const onClick = () => {
       emit('onClick');
@@ -57,7 +56,6 @@ export default defineComponent({
 
   &:active  {
     transition: all 0.2s ease-in-out;
-    background-color: $green-medium;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
   }
 }
