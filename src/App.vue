@@ -51,7 +51,7 @@ export default defineComponent({
 .cs__app {
   min-height: 100vh;
   max-width: 500px;
-  background-color: $green-lighter;
+  background-color: $green-base;
 
   &__logo {
     width: 120px;

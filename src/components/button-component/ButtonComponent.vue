@@ -53,7 +53,6 @@ export default defineComponent({
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
-  background: $green-lighter;
   @include shadow-flat;
 
   &:active  {
