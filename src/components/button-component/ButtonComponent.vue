@@ -1,7 +1,7 @@
 <template>
   <div>
     <button :style="composedClasses"
-            class="cs__button m-1 rounded-lg py-3"
+            class="py-3 m-1 rounded-lg cs__button"
             @click="onClick"
     >
       <slot />
@@ -25,7 +25,7 @@ export default defineComponent({
     },
     backgroundColor: {
       type: String,
-      default: '#fff',
+      default: '#c4d4c5',
     },
   },
   setup(props, { emit }) {
@@ -47,16 +47,18 @@ export default defineComponent({
 
 <style lang='scss'>
 @import '@/assets/styles/variables';
+@import '@/assets/styles/mixins';
 
 .cs__button {
   min-width: 210px;
   transition: all 0.2s ease-in-out;
-  background-color: white;
-  box-shadow: $green-darker 0px 25px 20px -20px;
+  border-radius: 50px;
+  background: $green-lighter;
+  @include shadow-flat;
 
   &:active  {
     transition: all 0.2s ease-in-out;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    @include shadow-pressed
   }
 }
 </style>

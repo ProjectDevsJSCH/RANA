@@ -1,5 +1,5 @@
 <template>
-  <div class="cs__app mx-auto p-2 pb-16 flex flex-col">
+  <div class="flex flex-col p-2 pb-16 mx-auto cs__app">
     <img :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
          :src="require('@/assets/icons/frontal-frog.svg')"
          alt="Rana"
@@ -56,12 +56,12 @@ export default defineComponent({
   &__logo {
     width: 120px;
     height: 120px;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     &--small {
       width: 60px;
       height: 60px;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.3s ease-in-out;
     }
   }
 }

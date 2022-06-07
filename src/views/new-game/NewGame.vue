@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-1 flex flex-col">
-    <div class="flex-1 cs__players-box m-3 mb-6" />
-    <div class="flex items-center justify-center flex-col pb-4">
+  <div class="flex flex-col flex-1">
+    <div class="flex-1 m-3 mb-6 cs__players-box rounded-3xl" />
+    <div class="flex flex-col items-center justify-center pb-4">
       <ButtonComponent
         class="mb-4 text-center"
         @onClick="addPlayer"
@@ -29,7 +29,7 @@
       </InputComponent>
 
       <ButtonComponent
-        class="mb-4 text-center mt-6"
+        class="mt-6 mb-4 text-center"
         @onClick="createPlayer"
       >
         <span>Añadir jugador</span>
@@ -75,8 +75,10 @@ export default defineComponent({
 
 <style lang='scss'>
 @import '@/assets/styles/variables';
+@import '@/assets/styles/mixins';
 
 .cs__players-box {
-  background-color: $gray-light;
+  background-color: $green-lighter;
+  @include shadow-pressed;
 }
 </style>

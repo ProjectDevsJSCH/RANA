@@ -1,8 +1,8 @@
 <template>
   <transition v-show="showModal" name="modal">
-    <div class="cs__modal-mask absolute top-0 left-0">
+    <div class="absolute top-0 left-0 cs__modal-mask">
       <div :class="[containerClass, 'cs__modal__content bg-white p-2']">
-        <button class="right-2 top-2 absolute" @click="closeModal">
+        <button class="absolute right-2 top-2" @click="closeModal">
           <span class="font-bold">X</span>
         </button>
         <slot />
@@ -43,7 +43,7 @@ export default defineComponent({
 .cs__modal-mask {
   height: 100vh;
   width: 100vw;
-  background-color: rgba($color: $green-dark, $alpha: 0.8);
+  background-color: rgba($color: $green-darker, $alpha: 0.8);
   backdrop-filter: blur(2px);
 }
 

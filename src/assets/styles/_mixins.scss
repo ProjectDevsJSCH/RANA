@@ -1,0 +1,8 @@
+@mixin shadow-flat {
+  box-shadow: 5px 8px 14px -5px $green-dark;
+}
+
+@mixin shadow-pressed {
+  box-shadow: inset 5px 8px 14px $green-medium,
+    inset -26px -26px 60px $green-lighter;
+}
