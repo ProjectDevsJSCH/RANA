@@ -58,7 +58,7 @@ export default defineComponent({
 
   &:active  {
     transition: all 0.2s ease-in-out;
-    @include shadow-pressed
+    @include shadow-pressed-soft
   }
 }
 </style>

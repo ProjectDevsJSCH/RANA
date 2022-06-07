@@ -4,7 +4,7 @@
       <slot name="label" />
       <input id="input"
              name="input"
-             :class="[inputClass, 'mt-2 cs__input rounded-sm py-2 px-1']"
+             :class="[inputClass, 'mt-2 cs__input rounded-lg py-2 px-1']"
              :type="inputType"
              :value="modelValue"
              @input="onInput"
@@ -45,8 +45,9 @@ export default defineComponent({
 
 <style lang='scss'>
 @import '@/assets/styles/variables';
+@import '@/assets/styles/mixins';
 
 .cs__input {
-  border: 1px solid $green-darker;
+  @include shadow-pressed-soft;
 }
 </style>

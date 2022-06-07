@@ -1,7 +1,7 @@
 <template>
   <transition v-show="showModal" name="modal">
     <div class="absolute top-0 left-0 cs__modal-mask">
-      <div :class="[containerClass, 'cs__modal__content bg-white p-2']">
+      <div :class="[containerClass, 'cs__modal__content p-2']">
         <button class="absolute right-2 top-2" @click="closeModal">
           <span class="font-bold">X</span>
         </button>
@@ -52,5 +52,6 @@ export default defineComponent({
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: $green-lighter;
 }
 </style>
