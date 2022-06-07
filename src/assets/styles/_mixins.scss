@@ -5,12 +5,12 @@
 
 @mixin shadow-pressed {
   background-color: $green-lighter;
-  box-shadow: inset 5px 8px 14px $green-medium,
-    inset -26px -26px 60px $green-white;
+  box-shadow: inset 5px 5px 25px $green-medium,
+    inset -26px -26px 80px $green-white;
 }
 
 @mixin shadow-pressed-soft {
   background-color: $green-lighter;
   box-shadow: inset 6px 6px 10px -5px $green-medium,
-    inset -10px -10px 13px -4px $green-white;
+    inset -10px -10px 23px -4px $green-white;
 }
