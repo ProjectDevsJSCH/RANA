@@ -1,16 +1,19 @@
 <template>
   <div class="flex items-center p-2 mb-3 cs__player-name">
     <p class="w-full">
-      {{ player }}
+      {{ playerName }}
     </p>
-    <img class="mr-3"
-         :src="require('@/assets/icons/edit.svg')"
-         alt=""
-    >
-    <img
-      :src="require('@/assets/icons/trash-can.svg')"
-      alt=""
-    >
+    <button class="mr-3" @click="onEdit">
+      <img :src="require('@/assets/icons/edit.svg')"
+           alt=""
+      >
+    </button>
+    <button @click="onDelete">
+      <img
+        :src="require('@/assets/icons/trash-can.svg')"
+        alt=""
+      >
+    </button>
   </div>
 </template>
 
@@ -20,14 +23,28 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'PlayerCard',
   props: {
-    player: {
+    playerName: {
       type: String,
       required: true,
     },
+    playerId: {
+      type: Number,
+      required: true,
+    },
   },
-  setup(props) {
+  setup(props, { emit }) {
+    const onDelete = () => {
+      emit('onDelete', props.playerId);
+    };
+
+    const onEdit = () => {
+      emit('onEdit', props.playerId, props.playerName, 'edit');
+    };
+
     return {
       props,
+      onDelete,
+      onEdit,
     };
   },
 });

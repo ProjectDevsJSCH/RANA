@@ -1,12 +1,15 @@
-.modal {
-  &-enter-active,
-  &-leave-active {
-    transition: opacity 0.5s;
-  }
+@import "@/assets/styles/variables";
 
-  &-enter-from,
-  &-leave-to {
-    transition: opacity 0.5s;
-    opacity: 0;
-  }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: inset 6px 6px 10px -5px $green-shadows,
+    inset -10px -10px 53px -4px $green-highlight;
+  -webkit-box-shadow: inset 6px 6px 10px -5px $green-shadows,
+    inset -10px -10px 53px -4px $green-highlight;
+}
+
+input:focus {
+  outline: none;
 }

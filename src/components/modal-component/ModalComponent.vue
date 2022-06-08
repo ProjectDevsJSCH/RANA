@@ -2,7 +2,7 @@
   <transition v-show="showModal" name="modal">
     <div class="absolute top-0 left-0 cs__modal-mask">
       <div :class="[containerClass, 'cs__modal__content p-2']">
-        <button class="absolute right-2 top-2" @click="closeModal">
+        <button class="absolute right-2 top-2" @click="onCloseModal">
           <span class="font-bold">X</span>
         </button>
         <slot />
@@ -28,11 +28,14 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const closeModal = () => {
-      emit('closeModal');
+    const onCloseModal = () => {
+      emit('onCloseModal');
     };
 
-    return { closeModal, props };
+    return {
+      onCloseModal,
+      props,
+    };
   },
 });
 </script>

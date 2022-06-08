@@ -4,7 +4,7 @@
       <slot name="label" />
       <input id="input"
              name="input"
-             :class="[inputClass, 'mt-2 cs__input rounded-lg py-2 px-1']"
+             :class="[inputClass, 'mt-2 cs__input rounded-lg p-2']"
              :type="inputType"
              :value="modelValue"
              @input="onInput"

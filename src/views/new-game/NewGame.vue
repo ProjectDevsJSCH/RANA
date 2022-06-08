@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col flex-1">
     <PlayersList :showModal="showModal"
-                 @closeModal="showModal = $event"
+                 :mode="mode"
+                 @onModalChange="onModalChange"
+                 @onEdit="onEdit"
     />
     <div class="flex flex-col items-center justify-center pb-4">
       <ButtonComponent
@@ -36,9 +38,11 @@ export default defineComponent({
     const state = reactive({
       showModal: false,
       playerName: '',
+      mode: 'create' as 'create' | 'edit',
     });
 
     const addPlayer = () => {
+      state.mode = 'create';
       state.showModal = true;
     };
 
@@ -46,9 +50,20 @@ export default defineComponent({
       state.showModal = true;
     };
 
+    const onModalChange = (showModal: boolean) => {
+      state.showModal = showModal;
+    };
+
+    const onEdit = (showModal: boolean, mode: 'create' | 'edit') => {
+      state.showModal = showModal;
+      state.mode = mode;
+    };
+
     return {
       addPlayer,
       begin,
+      onModalChange,
+      onEdit,
       ...toRefs(state),
     };
   },
