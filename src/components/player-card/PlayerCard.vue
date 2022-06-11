@@ -1,17 +1,26 @@
 <template>
-  <div class="flex items-center p-2 mb-3 cs__player-name">
-    <p class="w-full">
+  <div class="flex items-center mb-3 cs__player-name">
+    <img :src="require('@/assets/icons/draggable.svg')"
+         alt=""
+         class="w-4 h-4 ml-2"
+    >
+    <p class="w-full px-3 py-3">
       {{ playerName }}
     </p>
-    <button class="mr-3" @click="onEdit">
+    <button class="px-3"
+            @pointerdown="onEdit"
+    >
       <img :src="require('@/assets/icons/edit.svg')"
            alt=""
+           class="block h-5 w-7"
       >
     </button>
-    <button @click="onDelete">
-      <img
-        :src="require('@/assets/icons/trash-can.svg')"
-        alt=""
+    <button class="px-3"
+            @pointerdown="onDelete"
+    >
+      <img :src="require('@/assets/icons/trash-can.svg')"
+           alt=""
+           class="block h-5 w-7"
       >
     </button>
   </div>
@@ -50,10 +59,11 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import '@/assets/styles/variables';
 
 .cs__player-name {
   border: 4px solid white;
 }
+
 </style>

@@ -1,14 +1,17 @@
 <template>
   <div class="flex-1 m-3 mb-6 overflow-auto cs__players-list rounded-3xl p-7">
-    <PlayerCard v-for="player in playerList"
-                :key="player.name"
-                :playerName="player.name"
-                :playerId="player.playerId"
-                @onDelete="onDelete"
-                @onEdit="onEdit"
-    >
-      {{ player.name }}
-    </PlayerCard>
+    <draggable v-model="playerList" item-key="position">
+      <template #item="{element}">
+        <PlayerCard
+          :playerName="element.name"
+          :playerId="element.playerId"
+          @onDelete="onDelete"
+          @onEdit="onEdit"
+        >
+          {{ element.name }}
+        </PlayerCard>
+      </template>
+    </draggable>
 
     <ModalComponent
       container-class="p-8 w-80"
@@ -43,6 +46,7 @@
 import {
   defineComponent, PropType, reactive, toRefs,
 } from 'vue';
+import draggable from 'vuedraggable';
 
 import ButtonComponent from '../button-component/ButtonComponent.vue';
 import InputComponent from '../input-component/InputComponent.vue';
@@ -58,6 +62,7 @@ export default defineComponent({
     InputComponent,
     ModalComponent,
     PlayerCard,
+    draggable,
   },
   props: {
     showModal: {
@@ -87,10 +92,11 @@ export default defineComponent({
     const createPlayer = () => {
       if (state.currentPlayer === '') return;
 
+      const maxId = state.playerList.reduce((max, player) => (player.playerId > max ? player.playerId : max), 0);
+
       state.playerList.push({
-        playerId: state.playerList.length + 1,
+        playerId: maxId + 1,
         name: state.currentPlayer,
-        position: state.playerList.length + 1,
       });
 
       onCloseModal();
@@ -128,7 +134,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import '@/assets/styles/variables';
 @import '@/assets/styles/mixins';
 

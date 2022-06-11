@@ -1,9 +1,9 @@
 <template>
   <transition v-show="showModal" name="modal">
     <div class="absolute top-0 left-0 cs__modal-mask">
-      <div :class="[containerClass, 'cs__modal__content p-2']">
+      <div ref="content" :class="[containerClass, 'cs__modal__content p-2']">
         <button class="absolute right-2 top-2" @click="onCloseModal">
-          <span class="font-bold">X</span>
+          <img :src="require('@/assets/icons/closeIcon.svg')" alt="">
         </button>
         <slot />
       </div>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'ModalComponent',
@@ -28,11 +28,14 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const content = ref(null);
+
     const onCloseModal = () => {
       emit('onCloseModal');
     };
 
     return {
+      content,
       onCloseModal,
       props,
     };
@@ -40,7 +43,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import '@/assets/styles/variables';
 
 .cs__modal-mask {
