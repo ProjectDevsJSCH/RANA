@@ -38,7 +38,7 @@ export default defineComponent({
     };
 
     const onEdit = () => {
-      emit('onEdit', props.playerId, props.playerName, 'edit');
+      emit('onEdit', props.playerId, props.playerName);
     };
 
     return {

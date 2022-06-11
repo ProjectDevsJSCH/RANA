@@ -85,9 +85,7 @@ export default defineComponent({
     };
 
     const createPlayer = () => {
-      if (state.currentPlayer === '') {
-        return;
-      }
+      if (state.currentPlayer === '') return;
 
       state.playerList.push({
         playerId: state.playerList.length + 1,
@@ -99,9 +97,7 @@ export default defineComponent({
     };
 
     const updatePlayer = () => {
-      if (state.currentPlayer === '') {
-        return;
-      }
+      if (state.currentPlayer === '') return;
 
       state.playerList.find((player) => player.playerId === state.playerToEdit)!.name = state.currentPlayer;
 
@@ -112,11 +108,11 @@ export default defineComponent({
       state.playerList = state.playerList.filter((player) => player.playerId !== playerId);
     };
 
-    const onEdit = (playerId: number, playerName: string, mode: 'create' | 'edit') => {
+    const onEdit = (playerId: number, playerName: string) => {
       state.playerToEdit = playerId;
       state.currentPlayer = playerName;
 
-      emit('onEdit', true, mode);
+      emit('onEdit');
     };
 
     return {

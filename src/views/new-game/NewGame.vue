@@ -42,8 +42,8 @@ export default defineComponent({
     });
 
     const addPlayer = () => {
-      state.mode = 'create';
       state.showModal = true;
+      state.mode = 'create';
     };
 
     const begin = () => {
@@ -54,9 +54,9 @@ export default defineComponent({
       state.showModal = showModal;
     };
 
-    const onEdit = (showModal: boolean, mode: 'create' | 'edit') => {
-      state.showModal = showModal;
-      state.mode = mode;
+    const onEdit = () => {
+      state.showModal = true;
+      state.mode = 'edit';
     };
 
     return {
