@@ -32,7 +32,11 @@ export default defineComponent({
       }
     };
 
-    return { homeView, routeHome, home };
+    return {
+      homeView,
+      routeHome,
+      home,
+    };
   },
 });
 </script>
