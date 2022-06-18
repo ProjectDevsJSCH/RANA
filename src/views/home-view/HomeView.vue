@@ -1,5 +1,5 @@
 <template>
-  <div class="cs__home flex-1 flex items-center justify-center flex-col">
+  <div class="flex flex-col items-center justify-center flex-1 cs__home">
     <ButtonComponent
       class="mb-4 text-center"
       @onClick="newGame"
@@ -20,7 +20,7 @@
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
-import ButtonComponent from '@/components/button-component/ButtonComponent.vue';
+import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
 export default defineComponent({
   name: 'HomeView',

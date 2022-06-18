@@ -26,8 +26,8 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 
-import ButtonComponent from '@/components/button-component/ButtonComponent.vue';
 import PlayersList from '@/components/players-list/PlayersList.vue';
+import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
 export default defineComponent({
   name: 'NewGame',

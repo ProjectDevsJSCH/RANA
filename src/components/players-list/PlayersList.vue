@@ -14,7 +14,7 @@
     </draggable>
 
     <ModalComponent
-      container-class="p-8 w-80"
+      containerClass="p-8 w-80"
       :showModal="showModal"
       @onCloseModal="onCloseModal"
     >
@@ -48,9 +48,10 @@ import {
 } from 'vue';
 import draggable from 'vuedraggable';
 
-import ButtonComponent from '../button-component/ButtonComponent.vue';
-import InputComponent from '../input-component/InputComponent.vue';
-import ModalComponent from '../modal-component/ModalComponent.vue';
+import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
+import InputComponent from '@/ui-components/input-component/InputComponent.vue';
+import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
+
 import PlayerCard from '../player-card/PlayerCard.vue';
 
 import { PlayerInformation } from './interface';
@@ -58,11 +59,11 @@ import { PlayerInformation } from './interface';
 export default defineComponent({
   name: 'PlayersList',
   components: {
-    ButtonComponent,
-    InputComponent,
-    ModalComponent,
     PlayerCard,
     draggable,
+    ModalComponent,
+    ButtonComponent,
+    InputComponent,
   },
   props: {
     showModal: {
