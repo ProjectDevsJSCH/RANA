@@ -1,3 +1,5 @@
+import { GAMES } from '@/db/enums/games.enum';
+
 interface Round {
   number: number;
   score: number;
@@ -6,7 +8,7 @@ interface Round {
 
 export interface GameStore {
   idPlayer: number;
-  name: string;
+  typeGame: GAMES;
   totalScore: number;
   rounds: Round[];
 }

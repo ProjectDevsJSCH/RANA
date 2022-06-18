@@ -7,6 +7,7 @@
              :class="[inputClass, 'mt-2 cs__input rounded-lg p-2']"
              :type="inputType"
              :value="modelValue"
+             :placeholder="placeholder"
              @input="onInput"
       >
     </label>
@@ -32,6 +33,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    placeholder: {
+      type: String,
+      default: '',
+    },
   },
   setup(props, { emit }) {
     const onInput = (event: Event) => {
@@ -50,4 +55,5 @@ export default defineComponent({
 .cs__input {
   @include shadow-pressed-soft;
 }
+
 </style>
