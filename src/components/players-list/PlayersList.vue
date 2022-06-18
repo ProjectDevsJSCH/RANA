@@ -1,22 +1,20 @@
 <template>
   <div class="flex-1 m-3 mb-6 overflow-auto cs__players-list rounded-3xl p-7">
     <draggable v-model="playerList" item-key="position">
-      <template #item="{element}">
-        <PlayerCard
-          :playerName="element.name"
-          :playerId="element.playerId"
-          @onDelete="onDelete"
-          @onEdit="onEdit"
+      <template #item="{ element }">
+        <PlayerCard :playerName="element.name"
+                    :playerId="element.playerId"
+                    @onDelete="onDelete"
+                    @onEdit="onEdit"
         >
           {{ element.name }}
         </PlayerCard>
       </template>
     </draggable>
 
-    <ModalComponent
-      containerClass="p-8 w-80"
-      :showModal="showModal"
-      @onCloseModal="onCloseModal"
+    <ModalComponent containerClass="p-8 w-80"
+                    :showModal="showModal"
+                    @onCloseModal="onCloseModal"
     >
       <InputComponent v-model="currentPlayer">
         <template #label>
@@ -24,17 +22,15 @@
         </template>
       </InputComponent>
 
-      <ButtonComponent
-        v-if="mode === 'create'"
-        class="mt-6 text-center"
-        @onClick="createPlayer"
+      <ButtonComponent v-if="mode === 'create'"
+                       class="mt-6 text-center"
+                       @onClick="createPlayer"
       >
         <span>Añadir jugador</span>
       </ButtonComponent>
-      <ButtonComponent
-        v-else
-        class="mt-6 text-center"
-        @onClick="updatePlayer"
+      <ButtonComponent v-else
+                       class="mt-6 text-center"
+                       @onClick="updatePlayer"
       >
         <span>Editar jugador</span>
       </ButtonComponent>

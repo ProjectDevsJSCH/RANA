@@ -7,17 +7,13 @@
     <p class="w-full px-3 py-3">
       {{ playerName }}
     </p>
-    <button class="px-3"
-            @pointerdown="onEdit"
-    >
+    <button class="px-3" @pointerdown="onEdit">
       <img :src="require('@/assets/icons/edit.svg')"
            alt=""
            class="block h-5 w-7"
       >
     </button>
-    <button class="px-3"
-            @pointerdown="onDelete"
-    >
+    <button class="px-3" @pointerdown="onDelete">
       <img :src="require('@/assets/icons/trash-can.svg')"
            alt=""
            class="block h-5 w-7"
@@ -65,5 +61,4 @@ export default defineComponent({
 .cs__player-name {
   border: 4px solid white;
 }
-
 </style>

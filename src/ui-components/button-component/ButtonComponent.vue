@@ -55,7 +55,7 @@ export default defineComponent({
   border-radius: 50px;
   @include shadow-flat;
 
-  &:active  {
+  &:active {
     transition: all 0.2s ease-in-out;
     @include shadow-pressed-soft
   }

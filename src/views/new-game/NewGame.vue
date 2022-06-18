@@ -1,9 +1,10 @@
 <template>
   <div class="flex flex-col flex-1">
-    <PlayersList :showModal="showModal"
-                 :mode="mode"
-                 @onModalChange="onModalChange"
-                 @onEdit="onEdit"
+    <PlayersList
+      :showModal="showModal"
+      :mode="mode"
+      @onModalChange="onModalChange"
+      @onEdit="onEdit"
     />
     <div class="flex flex-col items-center justify-center pb-4">
       <ButtonComponent
@@ -13,10 +14,7 @@
         <span>Añadir jugador</span>
       </ButtonComponent>
 
-      <ButtonComponent
-        class="text-center"
-        @onClick="begin"
-      >
+      <ButtonComponent class="text-center" @onClick="begin">
         <span>Comenzar</span>
       </ButtonComponent>
     </div>
@@ -32,7 +30,8 @@ import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vu
 export default defineComponent({
   name: 'NewGame',
   components: {
-    ButtonComponent, PlayersList,
+    ButtonComponent,
+    PlayersList,
   },
   setup() {
     const state = reactive({
