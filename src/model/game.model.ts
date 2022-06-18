@@ -5,6 +5,7 @@ interface Round {
 }
 
 export interface GameStore {
+  idPlayer: number;
   name: string;
   totalScore: number;
   rounds: Round[];

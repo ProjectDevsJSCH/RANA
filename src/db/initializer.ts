@@ -1,4 +1,3 @@
-// if installed from npm use 'openDB'
 import { openDB } from 'idb';
 
 import { DBModel } from '@/api/db.model';
@@ -17,10 +16,16 @@ const dbPromise = async () => {
   return openDB<DBModel>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(DB_STORE_GAME)) {
-        db.createObjectStore(DB_STORE_GAME);
+        db.createObjectStore(DB_STORE_GAME, {
+          keyPath: 'idPlayer',
+          autoIncrement: true,
+        });
       }
       if (!db.objectStoreNames.contains(DB_STORE_CONFIG)) {
-        db.createObjectStore(DB_STORE_CONFIG);
+        db.createObjectStore(DB_STORE_CONFIG, {
+          keyPath: 'idConfig',
+          autoIncrement: true,
+        });
       }
     },
   });
