@@ -11,8 +11,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+import { dbInitializer } from './db/initializer';
 
 export default defineComponent({
   name: 'App',
@@ -21,6 +23,10 @@ export default defineComponent({
     const router = useRouter();
 
     const homeView = computed(() => route.name === 'HomeView');
+
+    onBeforeMount(async () => {
+      await dbInitializer();
+    });
 
     const routeHome = () => {
       router.push({ name: 'HomeView' });

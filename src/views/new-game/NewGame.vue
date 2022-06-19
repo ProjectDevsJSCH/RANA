@@ -7,11 +7,17 @@
       @onEdit="onEdit"
     />
     <div class="flex flex-col items-center justify-center pb-4">
-      <ButtonComponent class="mb-4 text-center" @onClick="addPlayer">
+      <ButtonComponent
+        class="mb-4 text-center"
+        @onClick="addPlayer"
+      >
         <span>Añadir jugador</span>
       </ButtonComponent>
 
-      <ButtonComponent class="text-center" @onClick="begin">
+      <ButtonComponent
+        class="text-center"
+        @onClick="begin"
+      >
         <span>Comenzar</span>
       </ButtonComponent>
     </div>
@@ -19,6 +25,7 @@
     <GameSelection
       :showModal="showGameModal"
       @onCloseModal="onCloseGameModal"
+      @onSubmit="onSubmit"
     />
   </div>
 </template>
@@ -26,8 +33,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 
+import { GameApi } from '@/api/game.api';
 import GameSelection from '@/components/game-selection/GameSelection.vue';
 import PlayersList from '@/components/players-list/PlayersList.vue';
+import { GAMES } from '@/db/enums/games.enum';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
 export default defineComponent({
@@ -67,6 +76,10 @@ export default defineComponent({
       state.showGameModal = false;
     };
 
+    const onSubmit = (selectedOption: GAMES, value: string) => {
+      GameApi.setNewGame(selectedOption, value);
+    };
+
     return {
       ...toRefs(state),
       addPlayer,
@@ -74,6 +87,7 @@ export default defineComponent({
       onModalChange,
       onEdit,
       onCloseGameModal,
+      onSubmit,
     };
   },
 });

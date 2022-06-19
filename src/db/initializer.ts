@@ -1,28 +1,28 @@
 import { openDB } from 'idb';
 
-import { DBModel } from '@/api/db.model';
 import {
   DB_NAME,
-  DB_STORE_CONFIG,
-  DB_STORE_GAME,
+  TABLE_STORE_CONFIG,
+  TABLE_STORE_PLAYERS,
   DB_VERSION,
 } from '@/constants/db.constants';
+import { DBModel } from '@/model/db.model';
 
-const dbPromise = async () => {
+export const dbInitializer = async () => {
   if (!('indexedDB' in window)) {
     throw new Error('Browser does not support IndexedDB');
   }
 
   return openDB<DBModel>(DB_NAME, DB_VERSION, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains(DB_STORE_GAME)) {
-        db.createObjectStore(DB_STORE_GAME, {
+      if (!db.objectStoreNames.contains(TABLE_STORE_PLAYERS)) {
+        db.createObjectStore(TABLE_STORE_PLAYERS, {
           keyPath: 'idPlayer',
           autoIncrement: true,
         });
       }
-      if (!db.objectStoreNames.contains(DB_STORE_CONFIG)) {
-        db.createObjectStore(DB_STORE_CONFIG, {
+      if (!db.objectStoreNames.contains(TABLE_STORE_CONFIG)) {
+        db.createObjectStore(TABLE_STORE_CONFIG, {
           keyPath: 'idConfig',
           autoIncrement: true,
         });
@@ -31,4 +31,6 @@ const dbPromise = async () => {
   });
 };
 
-export default dbPromise;
+export async function dbInstance() {
+  return openDB(DB_NAME, 1);
+}

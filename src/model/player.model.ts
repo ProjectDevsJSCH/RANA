@@ -1,14 +1,12 @@
-import { GAMES } from '@/db/enums/games.enum';
-
 interface Round {
   number: number;
   score: number;
   played: boolean;
 }
 
-export interface GameStore {
+export interface PlayerStore {
   idPlayer: number;
-  typeGame: GAMES;
+  name: string;
   totalScore: number;
   rounds: Round[];
 }
