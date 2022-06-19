@@ -32,5 +32,5 @@ export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
 };
 
 export async function dbInstance(): Promise<IDBPDatabase<unknown>> {
-  return openDB(DB_NAME, 1);
+  return openDB(DB_NAME, DB_VERSION);
 }

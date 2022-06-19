@@ -18,4 +18,9 @@ export class GameApi {
       winner: '',
     });
   }
+
+  static async cleanData(): Promise<void> {
+    const db = await dbInstance();
+    await db.clear(TABLE_STORE_CONFIG);
+  }
 }

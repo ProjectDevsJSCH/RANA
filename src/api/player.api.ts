@@ -21,4 +21,9 @@ export class PlayerApi {
 
     await Promise.all(additionPool);
   }
+
+  static async cleanData(): Promise<void> {
+    const db = await dbInstance();
+    await db.clear(TABLE_STORE_PLAYERS);
+  }
 }
