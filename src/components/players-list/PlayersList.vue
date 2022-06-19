@@ -45,12 +45,14 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash';
 import {
   computed,
   defineComponent,
   PropType,
   reactive,
   toRefs,
+  watch,
 } from 'vue';
 import draggable from 'vuedraggable';
 
@@ -89,6 +91,8 @@ export default defineComponent({
       playerList: [] as Array<PlayerInformation>,
       playerToEdit: -1,
     });
+
+    const disabled = computed(() => state.currentPlayer === '');
 
     const onCloseModal = () => {
       state.currentPlayer = '';
@@ -129,7 +133,9 @@ export default defineComponent({
       emit('onEdit');
     };
 
-    const disabled = computed(() => state.currentPlayer === '');
+    watch(() => _.cloneDeep(state.playerList), (newValue) => {
+      emit('onPlayerListChange', newValue);
+    });
 
     return {
       ...toRefs(state),

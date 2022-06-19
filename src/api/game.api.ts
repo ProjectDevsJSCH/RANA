@@ -6,9 +6,9 @@ import { dbInstance } from '@/db/initializer';
 
 export class GameApi {
   static async setNewGame(selectedOption: GAMES, value: string) {
-    console.log(selectedOption, GAMES.ROUND_LIMIT, value);
     const db = await dbInstance();
-    db.add(TABLE_STORE_CONFIG, {
+
+    await db.add(TABLE_STORE_CONFIG, {
       idConfig: uniqid(),
       type: selectedOption,
       currentPlayer: '',

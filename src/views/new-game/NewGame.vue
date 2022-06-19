@@ -5,6 +5,7 @@
       :mode="mode"
       @onModalChange="onModalChange"
       @onEdit="onEdit"
+      @onPlayerListChange="onPlayerListChange"
     />
     <div class="flex flex-col items-center justify-center pb-4">
       <ButtonComponent
@@ -32,10 +33,13 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { GameApi } from '@/api/game.api';
+import { PlayerApi } from '@/api/player.api';
 import GameSelection from '@/components/game-selection/GameSelection.vue';
 import PlayersList from '@/components/players-list/PlayersList.vue';
+import { PlayerInformation } from '@/components/players-list/interface';
 import { GAMES } from '@/db/enums/games.enum';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
@@ -47,11 +51,14 @@ export default defineComponent({
     GameSelection,
   },
   setup() {
+    const router = useRouter();
+
     const state = reactive({
       showPlayerModal: false,
       showGameModal: false,
       playerName: '',
       mode: 'create' as 'create' | 'edit',
+      playerList: [] as Array<PlayerInformation>,
     });
 
     const addPlayer = () => {
@@ -76,8 +83,20 @@ export default defineComponent({
       state.showGameModal = false;
     };
 
-    const onSubmit = (selectedOption: GAMES, value: string) => {
-      GameApi.setNewGame(selectedOption, value);
+    const onPlayerListChange = (playerList: Array<PlayerInformation>) => {
+      state.playerList = playerList;
+    };
+
+    const onSubmit = async (selectedOption: GAMES, value: string) => {
+      try {
+        await GameApi.setNewGame(selectedOption, value);
+        await PlayerApi.addPlayers(state.playerList);
+      } catch (error) {
+        return;
+      }
+
+      state.showGameModal = false;
+      router.push({ name: 'CurrentTurn' });
     };
 
     return {
@@ -88,6 +107,7 @@ export default defineComponent({
       onEdit,
       onCloseGameModal,
       onSubmit,
+      onPlayerListChange,
     };
   },
 });
