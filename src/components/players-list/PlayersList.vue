@@ -45,9 +45,12 @@
 </template>
 
 <script lang="ts">
-import { computed } from '@vue/reactivity';
 import {
-  defineComponent, PropType, reactive, toRefs,
+  computed,
+  defineComponent,
+  PropType,
+  reactive,
+  toRefs,
 } from 'vue';
 import draggable from 'vuedraggable';
 
