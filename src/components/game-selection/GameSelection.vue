@@ -23,6 +23,13 @@
         <span class="font-bold">{{ secondLabel }}</span>
       </template>
     </InputComponent>
+
+    <ButtonComponent
+      buttonClass="mx-auto block mt-10"
+      :disabled="disabled"
+    >
+      <p>Comenzar</p>
+    </ButtonComponent>
   </ModalComponent>
 </template>
 
@@ -35,6 +42,7 @@ import {
 } from 'vue';
 
 import { GAMES } from '@/db/enums/games.enum';
+import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
 import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
 import SelectComponent from '@/ui-components/select-component/SelectComponent.vue';
@@ -44,6 +52,7 @@ export default defineComponent({
     ModalComponent,
     InputComponent,
     SelectComponent,
+    ButtonComponent,
   },
   name: 'GameSelection',
   props: {
@@ -90,10 +99,13 @@ export default defineComponent({
       }
     });
 
+    const disabled = computed(() => state.value === '');
+
     return {
       ...toRefs(state),
       onCloseModal,
       secondLabel,
+      disabled,
       props,
     };
   },

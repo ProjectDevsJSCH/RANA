@@ -1,10 +1,16 @@
 <template>
   <div class="flex flex-col items-center justify-center flex-1 cs__home">
-    <ButtonComponent class="mb-4 text-center" @onClick="newGame">
+    <ButtonComponent
+      class="mb-4 text-center"
+      @onClick="newGame"
+    >
       <span>Juego nuevo</span>
     </ButtonComponent>
 
-    <ButtonComponent class="text-center" @onClick="continueGame">
+    <ButtonComponent
+      class="text-center"
+      @onClick="continueGame"
+    >
       <span>Continuar juego</span>
     </ButtonComponent>
   </div>

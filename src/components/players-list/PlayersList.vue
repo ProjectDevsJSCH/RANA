@@ -26,14 +26,16 @@
 
       <ButtonComponent
         v-if="mode === 'create'"
-        class="mt-6 text-center"
+        class="block mx-auto mt-6 text-center"
+        :disabled="disabled"
         @onClick="createPlayer"
       >
         <span>Añadir jugador</span>
       </ButtonComponent>
       <ButtonComponent
         v-else
-        class="mt-6 text-center"
+        class="block mx-auto mt-6 text-center"
+        :disabled="disabled"
         @onClick="updatePlayer"
       >
         <span>Editar jugador</span>
@@ -43,6 +45,7 @@
 </template>
 
 <script lang="ts">
+import { computed } from '@vue/reactivity';
 import {
   defineComponent, PropType, reactive, toRefs,
 } from 'vue';
@@ -123,6 +126,8 @@ export default defineComponent({
       emit('onEdit');
     };
 
+    const disabled = computed(() => state.currentPlayer === '');
+
     return {
       ...toRefs(state),
       createPlayer,
@@ -130,6 +135,7 @@ export default defineComponent({
       onCloseModal,
       onDelete,
       onEdit,
+      disabled,
       props,
     };
   },

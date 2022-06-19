@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <button :style="composedClasses"
-            class="py-3 m-1 rounded-lg cs__button"
-            @click="onClick"
-    >
-      <slot />
-    </button>
-  </div>
+  <button
+    :style="composedClasses"
+    :class="[buttonClass, 'py-3 m-1 rounded-lg cs__button']"
+    :disabled="disabled"
+    @click="onClick"
+  >
+    <slot />
+  </button>
 </template>
 
 <script lang="ts">
@@ -26,6 +26,14 @@ export default defineComponent({
     backgroundColor: {
       type: String,
       default: '#c4d4c5',
+    },
+    buttonClass: {
+      type: String,
+      default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit }) {
@@ -58,6 +66,11 @@ export default defineComponent({
   &:active {
     transition: all 0.2s ease-in-out;
     @include shadow-pressed-soft
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    box-shadow: none;
   }
 }
 </style>
