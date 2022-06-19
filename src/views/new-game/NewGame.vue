@@ -61,33 +61,33 @@ export default defineComponent({
       playerList: [] as Array<PlayerInformation>,
     });
 
-    const addPlayer = () => {
+    const addPlayer = (): void => {
       state.showPlayerModal = true;
       state.mode = 'create';
     };
 
-    const begin = () => {
+    const begin = (): void => {
       state.showGameModal = true;
     };
 
-    const onModalChange = (showModal: boolean) => {
+    const onModalChange = (showModal: boolean): void => {
       state.showPlayerModal = showModal;
     };
 
-    const onEdit = () => {
+    const onEdit = (): void => {
       state.showPlayerModal = true;
       state.mode = 'edit';
     };
 
-    const onCloseGameModal = () => {
+    const onCloseGameModal = (): void => {
       state.showGameModal = false;
     };
 
-    const onPlayerListChange = (playerList: Array<PlayerInformation>) => {
+    const onPlayerListChange = (playerList: Array<PlayerInformation>): void => {
       state.playerList = playerList;
     };
 
-    const onSubmit = async (selectedOption: GAMES, value: string) => {
+    const onSubmit = async (selectedOption: GAMES, value: string): Promise<void> => {
       try {
         await GameApi.setNewGame(selectedOption, value);
         await PlayerApi.addPlayers(state.playerList);

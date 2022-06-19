@@ -98,11 +98,11 @@ export default defineComponent({
 
     const disabled = computed(() => state.value === '');
 
-    const onCloseModal = () => {
+    const onCloseModal = (): void => {
       emit('onCloseModal');
     };
 
-    const onClick = () => {
+    const onClick = (): void => {
       emit('onSubmit', state.selectedOption, state.value);
     };
 

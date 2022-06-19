@@ -1,4 +1,4 @@
-import { openDB } from 'idb';
+import { IDBPDatabase, openDB } from 'idb';
 
 import {
   DB_NAME,
@@ -8,7 +8,7 @@ import {
 } from '@/constants/db.constants';
 import { DBModel } from '@/model/db.model';
 
-export const dbInitializer = async () => {
+export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
   if (!('indexedDB' in window)) {
     throw new Error('Browser does not support IndexedDB');
   }
@@ -31,6 +31,6 @@ export const dbInitializer = async () => {
   });
 };
 
-export async function dbInstance() {
+export async function dbInstance(): Promise<IDBPDatabase<unknown>> {
   return openDB(DB_NAME, 1);
 }

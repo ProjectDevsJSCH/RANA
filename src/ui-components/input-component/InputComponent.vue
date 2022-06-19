@@ -40,7 +40,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const onInput = (event: Event) => {
+    const onInput = (event: Event): void => {
       emit('update:modelValue', (event.target as HTMLInputElement).value as string);
     };
 

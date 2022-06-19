@@ -30,7 +30,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const content = ref(null);
 
-    const onCloseModal = () => {
+    const onCloseModal = (): void => {
       emit('onCloseModal');
     };
 

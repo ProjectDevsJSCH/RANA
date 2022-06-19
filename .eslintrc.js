@@ -16,6 +16,7 @@ const rules = {
   '@typescript-eslint/no-explicit-any': 'off',
   '@typescript-eslint/member-delimiter-style': 'off',
   '@typescript-eslint/no-non-null-assertion': 'off',
+  '@typescript-eslint/explicit-function-return-type': 1,
   'import/prefer-default-export': 'off',
   'no-useless-constructor': 'off',
   'lines-between-class-members': 'off',

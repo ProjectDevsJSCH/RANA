@@ -3,7 +3,7 @@ import { TABLE_STORE_PLAYERS } from '@/constants/db.constants';
 import { dbInstance } from '@/db/initializer';
 
 export class PlayerApi {
-  static async addPlayers(players: PlayerInformation[]) {
+  static async addPlayers(players: PlayerInformation[]): Promise<void> {
     const db = await dbInstance();
     const tx = db.transaction(TABLE_STORE_PLAYERS, 'readwrite');
     const additionPool = [];

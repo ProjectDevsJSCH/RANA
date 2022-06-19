@@ -38,11 +38,11 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const onDelete = () => {
+    const onDelete = (): void => {
       emit('onDelete', props.playerId);
     };
 
-    const onEdit = () => {
+    const onEdit = (): void => {
       emit('onEdit', props.playerId, props.playerName);
     };
 

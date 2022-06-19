@@ -44,7 +44,7 @@ export default defineComponent({
       'background-color': backgroundColor || 'none',
     }));
 
-    const onClick = () => {
+    const onClick = (): void => {
       emit('onClick');
     };
 

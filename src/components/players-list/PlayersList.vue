@@ -94,13 +94,13 @@ export default defineComponent({
 
     const disabled = computed(() => state.currentPlayer === '');
 
-    const onCloseModal = () => {
+    const onCloseModal = (): void => {
       state.currentPlayer = '';
 
       emit('onModalChange', false);
     };
 
-    const createPlayer = () => {
+    const createPlayer = (): void => {
       if (state.currentPlayer === '') return;
 
       const maxId = state.playerList
@@ -114,7 +114,7 @@ export default defineComponent({
       onCloseModal();
     };
 
-    const updatePlayer = () => {
+    const updatePlayer = (): void => {
       if (state.currentPlayer === '') return;
 
       state.playerList.find((player) => player.playerId === state.playerToEdit)!.name = state.currentPlayer;
@@ -122,18 +122,18 @@ export default defineComponent({
       onCloseModal();
     };
 
-    const onDelete = (playerId: number) => {
+    const onDelete = (playerId: number): void => {
       state.playerList = state.playerList.filter((player) => player.playerId !== playerId);
     };
 
-    const onEdit = (playerId: number, playerName: string) => {
+    const onEdit = (playerId: number, playerName: string): void => {
       state.playerToEdit = playerId;
       state.currentPlayer = playerName;
 
       emit('onEdit');
     };
 
-    watch(() => _.cloneDeep(state.playerList), (newValue) => {
+    watch(() => _.cloneDeep(state.playerList), (newValue): void => {
       emit('onPlayerListChange', newValue);
     });
 

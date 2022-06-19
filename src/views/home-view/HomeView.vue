@@ -28,11 +28,11 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
-    const newGame = () => {
+    const newGame = (): void => {
       router.push({ name: 'NewGame' });
     };
 
-    const continueGame = () => {
+    const continueGame = (): void => {
       console.log('w');
     };
 

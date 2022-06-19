@@ -5,7 +5,7 @@ import { GAMES } from '@/db/enums/games.enum';
 import { dbInstance } from '@/db/initializer';
 
 export class GameApi {
-  static async setNewGame(selectedOption: GAMES, value: string) {
+  static async setNewGame(selectedOption: GAMES, value: string): Promise<void> {
     const db = await dbInstance();
 
     await db.add(TABLE_STORE_CONFIG, {

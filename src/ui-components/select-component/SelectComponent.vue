@@ -50,7 +50,7 @@ export default defineComponent({
     const state = reactive({
     });
 
-    const onChange = (event: Event) => {
+    const onChange = (event: Event): void => {
       emit('update:modelValue', (event.target as HTMLInputElement).value as string);
     };
 

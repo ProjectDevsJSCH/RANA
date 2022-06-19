@@ -28,11 +28,11 @@ export default defineComponent({
       await dbInitializer();
     });
 
-    const routeHome = () => {
+    const routeHome = (): void => {
       router.push({ name: 'HomeView' });
     };
 
-    const home = (event: KeyboardEvent) => {
+    const home = (event: KeyboardEvent): void => {
       if (event.key === 'h') {
         routeHome();
       }
