@@ -2,13 +2,14 @@
   <div>
     <label for="input" class="flex flex-col">
       <slot name="label" />
-      <input id="input"
-             name="input"
-             :class="[inputClass, 'mt-2 cs__input rounded-lg p-2']"
-             :type="inputType"
-             :value="modelValue"
-             :placeholder="placeholder"
-             @input="onInput"
+      <input
+        id="input"
+        name="input"
+        :class="[inputClass, 'mt-2 cs__input rounded-lg p-2']"
+        :type="inputType"
+        :value="modelValue"
+        :placeholder="placeholder"
+        @input="onInput"
       >
     </label>
   </div>
@@ -20,14 +21,14 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'InputComponent',
   props: {
-    inputType: {
-      type: String,
-      default: 'text',
-    },
     modelValue: {
       type: String,
       default: '',
       required: true,
+    },
+    inputType: {
+      type: String,
+      default: 'text',
     },
     inputClass: {
       type: String,

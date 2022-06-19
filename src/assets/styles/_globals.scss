@@ -10,7 +10,7 @@ input:-webkit-autofill:active {
     inset -10px -10px 53px -4px $green-highlight;
 }
 
-input:focus {
+*:focus {
   outline: none;
 }
 
