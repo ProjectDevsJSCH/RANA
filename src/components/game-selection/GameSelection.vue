@@ -27,6 +27,7 @@
     <ButtonComponent
       buttonClass="mx-auto block mt-10"
       :disabled="disabled"
+      @click="onClick"
     >
       <p>Comenzar</p>
     </ButtonComponent>
@@ -82,10 +83,6 @@ export default defineComponent({
       ],
     });
 
-    const onCloseModal = () => {
-      emit('onCloseModal');
-    };
-
     const secondLabel = computed(() => {
       switch (state.selectedOption) {
         case GAMES.SCORE_LIMIT:
@@ -101,11 +98,20 @@ export default defineComponent({
 
     const disabled = computed(() => state.value === '');
 
+    const onCloseModal = () => {
+      emit('onCloseModal');
+    };
+
+    const onClick = () => {
+      emit('onSubmit', state.selectedOption, state.value);
+    };
+
     return {
       ...toRefs(state),
-      onCloseModal,
       secondLabel,
       disabled,
+      onCloseModal,
+      onClick,
       props,
     };
   },
