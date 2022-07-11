@@ -54,14 +54,14 @@ export default defineComponent({
   font-family: Montserrat, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $green-darker;
+  color: $erie-black;
   font-size: 14px;
 }
 
 .cs__app {
   min-height: 100vh;
   max-width: 500px;
-  background-color: $green-base;
+  background-color: $alabaster;
 
   &__logo {
     width: 120px;

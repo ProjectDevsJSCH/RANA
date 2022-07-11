@@ -2,7 +2,9 @@
   <transition v-show="showModal" name="modal">
     <div class="absolute top-0 left-0 cs__modal-mask">
       <div ref="content" :class="[containerClass, 'cs__modal__content p-2']">
-        <button class="absolute right-2 top-2" @click="onCloseModal">
+        <button class="absolute bg-white rounded-full -right-3 -top-3"
+                @click="onCloseModal"
+        >
           <img :src="require('@/assets/icons/closeIcon.svg')" alt="">
         </button>
         <slot />
@@ -49,7 +51,7 @@ export default defineComponent({
 .cs__modal-mask {
   height: 100vh;
   width: 100vw;
-  background-color: rgba($color: $green-darker, $alpha: 0.8);
+  background-color: rgba($color: $erie-black, $alpha: 0.8);
   backdrop-filter: blur(2px);
 }
 
@@ -58,6 +60,6 @@ export default defineComponent({
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: $green-base;
+  background-color: $alabaster;
 }
 </style>

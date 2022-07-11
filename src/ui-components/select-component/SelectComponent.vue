@@ -68,7 +68,7 @@ export default defineComponent({
 @import '@/assets/styles/mixins';
 
 .cs__select {
-  @include shadow-flat-soft;
+  @include shadow-flat;
 }
 
 </style>

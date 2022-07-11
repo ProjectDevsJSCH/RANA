@@ -4,10 +4,10 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  box-shadow: inset 6px 6px 10px -5px $green-shadows,
-    inset -10px -10px 53px -4px $green-highlight;
-  -webkit-box-shadow: inset 6px 6px 10px -5px $green-shadows,
-    inset -10px -10px 53px -4px $green-highlight;
+  box-shadow: inset 6px 6px 10px -5px $middle-green,
+    inset -10px -10px 53px -4px $honeydew;
+  -webkit-box-shadow: inset 6px 6px 10px -5px $middle-green,
+    inset -10px -10px 53px -4px $honeydew;
 }
 
 *:focus {

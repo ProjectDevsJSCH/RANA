@@ -1,23 +1,13 @@
 @import "@/assets/styles/variables";
 
 @mixin shadow-flat {
-  background-color: $green-base;
-  box-shadow: 5px 8px 14px -5px $green-dark, inset 0px 6px 40px $green-highlight;
-}
-
-@mixin shadow-flat-soft {
-  background-color: $green-base;
-  box-shadow: 4px 8px 8px -7px $green-dark, inset 0px 6px 40px $green-highlight;
+  box-shadow: 5px 8px 8px -5px $erie-black-light;
 }
 
 @mixin shadow-pressed {
-  background-color: $green-base;
-  box-shadow: inset 2px 2px 15px $green-shadows,
-    inset -36px -36px 100px 40px $green-highlight;
+  box-shadow: inset 3px 5px 8px 0px $erie-black-light;
 }
 
 @mixin shadow-pressed-soft {
-  background-color: $green-base;
-  box-shadow: inset 6px 6px 10px -5px $green-shadows,
-    inset -10px -10px 53px -4px $green-highlight;
+  box-shadow: inset 7px 8px 10px -8px $erie-black-light;
 }

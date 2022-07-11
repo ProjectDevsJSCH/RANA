@@ -21,11 +21,11 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: '#111d13',
+      default: '#131515',
     },
     backgroundColor: {
       type: String,
-      default: '#c4d4c5',
+      default: '',
     },
     buttonClass: {
       type: String,
@@ -41,7 +41,7 @@ export default defineComponent({
 
     const composedClasses = computed(() => ({
       border: outline ? `2px solid ${color}` : 'none',
-      'background-color': backgroundColor || 'none',
+      'background-color': backgroundColor,
     }));
 
     const onClick = (): void => {
@@ -61,11 +61,12 @@ export default defineComponent({
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
+  background-color: $honeydew;
   @include shadow-flat;
 
   &:active {
     transition: all 0.2s ease-in-out;
-    @include shadow-pressed-soft
+    @include shadow-pressed
   }
 
   &:disabled {

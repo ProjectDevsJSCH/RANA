@@ -54,7 +54,7 @@ export default defineComponent({
 @import '@/assets/styles/mixins';
 
 .cs__input {
-  @include shadow-pressed-soft;
+  background-color: white;
 }
 
 </style>
