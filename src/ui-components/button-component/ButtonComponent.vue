@@ -58,16 +58,11 @@ export default defineComponent({
 @import '@/assets/styles/mixins';
 
 .cs__button {
+  color: white;
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
-  background-color: $honeydew;
-  @include shadow-flat;
-
-  &:active {
-    transition: all 0.2s ease-in-out;
-    @include shadow-pressed
-  }
+  background-color: $pine-tree;
 
   &:disabled {
     opacity: 0.5;

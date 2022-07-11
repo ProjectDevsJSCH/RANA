@@ -59,6 +59,6 @@ export default defineComponent({
 @import '@/assets/styles/variables';
 
 .cs__player-name {
-  border: 3px solid $erie-black-light;
+  border: 1px solid $pine-tree;
 }
 </style>
