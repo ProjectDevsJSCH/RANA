@@ -89,7 +89,7 @@ export default defineComponent({
 
     const onSubmit = async (selectedOption: GAMES, value: string): Promise<void> => {
       try {
-        await GameApi.setNewGame(selectedOption, value);
+        await GameApi.setNewGame(selectedOption, value, state.playerList[0].name);
         await PlayerApi.addPlayers(state.playerList);
       } catch (error) {
         return;
