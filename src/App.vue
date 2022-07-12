@@ -61,7 +61,7 @@ export default defineComponent({
 .cs__app {
   min-height: 100vh;
   max-width: 500px;
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+  background-image: linear-gradient(180deg, rgba(92, 80, 0, 0.064) 0%, rgba(92, 80, 0, 0.163) 100%);
 
   &__logo {
     width: 120px;
