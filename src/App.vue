@@ -54,24 +54,24 @@ export default defineComponent({
   font-family: Montserrat, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $erie-black;
+  color: $dark;
   font-size: 14px;
 }
 
 .cs__app {
   min-height: 100vh;
   max-width: 500px;
-  background-color: $alabaster;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
 
   &__logo {
     width: 120px;
     height: 120px;
-    transition: all 0.3s ease-in-out;
+    transition: all 1s ease-in-out;
 
     &--small {
       width: 60px;
       height: 60px;
-      transition: all 0.3s ease-in-out;
+      transition: all 1s ease-in-out;
     }
   }
 }

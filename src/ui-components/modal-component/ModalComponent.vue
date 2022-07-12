@@ -51,7 +51,7 @@ export default defineComponent({
 .cs__modal-mask {
   height: 100vh;
   width: 100vw;
-  background-color: rgba($color: $erie-black, $alpha: 0.8);
+  background-color: rgba($color: $dark, $alpha: 0.8);
   backdrop-filter: blur(2px);
 }
 

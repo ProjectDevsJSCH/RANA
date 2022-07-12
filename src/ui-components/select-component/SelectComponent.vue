@@ -68,7 +68,7 @@ export default defineComponent({
 @import '@/assets/styles/mixins';
 
 .cs__select {
-  border: 1px solid $erie-black-light;
+  border: 1px solid $shadow;
   background-color: white;
 }
 

@@ -62,7 +62,7 @@ export default defineComponent({
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
-  background-color: $pine-tree;
+  background-color: $contrast;
 
   &:disabled {
     opacity: 0.5;

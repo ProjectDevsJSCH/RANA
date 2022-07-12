@@ -1,13 +1,13 @@
 @import "@/assets/styles/variables";
 
 @mixin shadow-flat {
-  box-shadow: 5px 8px 8px -5px $erie-black-light;
+  box-shadow: 5px 8px 8px -5px $shadow;
 }
 
 @mixin shadow-pressed {
-  box-shadow: inset 3px 5px 8px 0px $erie-black-light;
+  box-shadow: inset 3px 5px 8px 0px $shadow;
 }
 
 @mixin shadow-pressed-soft {
-  box-shadow: inset 7px 8px 10px -8px $erie-black-light;
+  box-shadow: inset 7px 8px 10px -8px $shadow;
 }
