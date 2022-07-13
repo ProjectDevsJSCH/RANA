@@ -157,7 +157,7 @@ export default defineComponent({
 
 .cs__players-list {
   height: 350px;
-  border: 1px solid $shadow;
+  border: 1px solid $contrast;
   background-color: $base;
 }
 </style>

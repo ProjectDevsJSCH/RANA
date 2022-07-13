@@ -40,7 +40,7 @@ export default defineComponent({
     const { outline, color, backgroundColor } = props;
 
     const composedClasses = computed(() => ({
-      border: outline ? `2px solid ${color}` : 'none',
+      border: outline ? `2px solid ${color}` : '',
       'background-color': backgroundColor,
     }));
 
@@ -58,14 +58,16 @@ export default defineComponent({
 @import '@/assets/styles/mixins';
 
 .cs__button {
-  color: white;
+  color: $contrast;
+  font-weight: bold;
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
-  background-color: $contrast;
+  border-top: 1px solid $contrast;
+  border-bottom: 1px solid $contrast;
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.1;
     box-shadow: none;
   }
 }

@@ -55,7 +55,7 @@ export default defineComponent({
 
 .cs__input {
   background-color: white;
-  border: 1px solid $shadow;
+  border: 1px solid $contrast;
 }
 
 </style>
