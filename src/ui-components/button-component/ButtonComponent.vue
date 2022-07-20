@@ -63,8 +63,8 @@ export default defineComponent({
   min-width: 210px;
   transition: all 0.2s ease-in-out;
   border-radius: 50px;
-  border-top: 1px solid $contrast;
-  border-bottom: 1px solid $contrast;
+  border-top: 1px solid $shadow;
+  border-bottom: 1px solid $shadow;
 
   &:disabled {
     opacity: 0.1;

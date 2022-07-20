@@ -20,7 +20,7 @@
     >
       <InputComponent v-model="currentPlayer">
         <template #label>
-          <span class="font-bold">Nombre del jugador</span>
+          <span class="font-bold">Nombre</span>
         </template>
       </InputComponent>
 
@@ -157,7 +157,7 @@ export default defineComponent({
 
 .cs__players-list {
   height: 350px;
-  border: 1px solid $contrast;
+  border: 1px solid $shadow;
   background-color: $base;
 }
 </style>
