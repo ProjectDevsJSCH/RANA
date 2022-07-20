@@ -95,8 +95,6 @@ export default defineComponent({
     const disabled = computed(() => state.currentPlayer === '');
 
     const onCloseModal = (): void => {
-      state.currentPlayer = '';
-
       emit('onModalChange', false);
     };
 
@@ -135,6 +133,13 @@ export default defineComponent({
 
     watch(() => _.cloneDeep(state.playerList), (newValue): void => {
       emit('onPlayerListChange', newValue);
+    });
+
+    watch(() => props.showModal, (newValue): void => {
+      if (newValue) {
+        state.currentPlayer = '';
+        state.playerToEdit = -1;
+      }
     });
 
     return {

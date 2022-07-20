@@ -1,17 +1,22 @@
 <template>
   <div class="flex flex-col items-center justify-around flex-1">
-    <div class="flex items-center justify-center mt-10">
-      <img
-        class="w-40 h-40 p-2 mr-5 bg-black rounded-full"
-        :src="linkPlayer"
-        alt="Jugador actual"
+    <transition name="show">
+      <div
+        v-if="displayPlayer"
+        class="flex items-center justify-center mt-10"
       >
+        <img
+          class="w-40 h-40 p-2 mr-5 bg-black rounded-full"
+          :src="linkPlayer"
+          alt="Jugador actual"
+        >
 
-      <div class="text-center">
-        <p class="text-2xl">Turno de</p>
-        <p class="text-4xl font-bold">{{ currentPlayer }}</p>
+        <div class="text-center">
+          <p class="text-2xl">Turno de</p>
+          <p class="text-4xl font-bold">{{ currentPlayer }}</p>
+        </div>
       </div>
-    </div>
+    </transition>
 
     <InputComponent
       v-model="score"
@@ -62,6 +67,7 @@ export default defineComponent({
     const state = reactive({
       currentPlayer: '',
       score: '',
+      displayPlayer: false,
     });
 
     onBeforeMount(async () => {
@@ -70,6 +76,10 @@ export default defineComponent({
       } catch (error) {
         console.error(error);
       }
+
+      setTimeout(() => {
+        state.displayPlayer = true;
+      }, 200);
     });
 
     const linkPlayer = computed(() => `https://avatars.dicebear.com/api/bottts/${state.currentPlayer}.svg`);
@@ -81,6 +91,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang='scss' scoped>
-</style>

@@ -6,7 +6,9 @@
          @click="routeHome"
          @keypress="home"
     >
-    <router-view />
+    <router-view v-slot="{Component}">
+      <component :is="Component" />
+    </router-view>
   </div>
 </template>
 
@@ -66,12 +68,12 @@ export default defineComponent({
   &__logo {
     width: 120px;
     height: 120px;
-    transition: all .5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 
     &--small {
       width: 60px;
       height: 60px;
-      transition: all .5s ease-in-out;
+      transition: all 0.5s ease-in-out;
     }
   }
 }

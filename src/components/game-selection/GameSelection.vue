@@ -16,7 +16,7 @@
     <InputComponent
       v-model="value"
       placeholder="0"
-      class="mt-7"
+      class="mt-3"
       :inputType="'number'"
     >
       <template #label>
@@ -25,7 +25,7 @@
     </InputComponent>
 
     <ButtonComponent
-      buttonClass="mx-auto block mt-10"
+      buttonClass="mx-auto block mt-6"
       :disabled="disabled"
       @click="onClick"
     >

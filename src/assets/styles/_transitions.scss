@@ -1,12 +1,25 @@
 .modal {
   &-enter-active,
   &-leave-active {
-    transition: opacity 0.5s;
+    transition: opacity 0.3s;
   }
 
   &-enter-from,
   &-leave-to {
-    transition: opacity 0.5s;
+    transition: opacity 0.3s;
     opacity: 0;
   }
+}
+
+.show-enter-from,
+.show-leave-to {
+  opacity: 0;
+}
+.show-enter-to,
+.show-leave-from {
+  opacity: 1;
+}
+.show-enter-active,
+.show-leave-active {
+  transition: opacity 0.5s ease-in-out;
 }
