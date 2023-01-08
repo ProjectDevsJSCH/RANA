@@ -1,16 +1,16 @@
 import uniqid from 'uniqid';
 
-import { TABLE_STORE_CONFIG, TABLE_STORE_PLAYERS } from '@/constants/db.constants';
 import { GAMES } from '@/db/enums/games.enum';
 import { dbInstance } from '@/db/initializer';
-import { ConfigurationStore } from '@/model/tables/configuration.model';
-import { PlayerStore } from '@/model/tables/player.model';
+import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
+import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export class GameApi {
   static async setNewGame(
     selectedOption: GAMES,
     value: string,
-    playerId: number,
+    firstPlayerId: number,
+    numberOfPlayers: number,
   ): Promise<void> {
     const db = await dbInstance();
 
@@ -18,25 +18,32 @@ export class GameApi {
       idConfig: uniqid(),
       type: selectedOption,
       currentRound: 1,
-      currentPlayer: playerId,
-      limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? value : 0,
-      limitGameRounds: selectedOption === GAMES.ROUND_LIMIT ? value : 0,
-      eliminatedPlayersByRound: selectedOption === GAMES.PLAYOFFS ? value : 0,
+      currentPlayer: firstPlayerId,
+      totalPlayers: numberOfPlayers,
+      limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? +value : 0,
+      limitGameRounds: selectedOption === GAMES.ROUND_LIMIT ? +value : 0,
+      eliminatedPlayersByRound: selectedOption === GAMES.PLAYOFFS ? +value : 0,
       winner: '',
     });
   }
 
   static async getCurrentPlayer(): Promise<PlayerStore> {
     const db = await dbInstance();
-    const currentConfigs: ConfigurationStore[] = await db.getAll(TABLE_STORE_CONFIG);
-    const player: PlayerStore = await db.get(TABLE_STORE_PLAYERS, currentConfigs[0].currentPlayer);
+    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+    const player = await db.get(TABLE_STORE_PLAYERS, currentConfigs[0].currentPlayer) || {
+      idPlayer: -1,
+      name: '',
+      totalScore: 0,
+      rounds: [],
+    };
+
     return player;
   }
 
   static async setNextTurn(score: number): Promise<PlayerStore> {
     const db = await dbInstance();
-    const currentConfig: ConfigurationStore = (await db.getAll(TABLE_STORE_CONFIG))[0];
-    const allPlayers: PlayerStore[] = await db.getAll(TABLE_STORE_PLAYERS);
+    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
+    const allPlayers = await db.getAll(TABLE_STORE_PLAYERS);
     const currentPlayer = await this.getCurrentPlayer();
 
     // Update current player round information

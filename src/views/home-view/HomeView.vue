@@ -33,6 +33,7 @@ export default defineComponent({
     const newGame = async (): Promise<void> => {
       await PlayerApi.cleanData();
       await GameApi.cleanData();
+
       router.push({ name: 'NewGame' });
     };
 

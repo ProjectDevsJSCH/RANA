@@ -1,10 +1,13 @@
 import { GAMES } from '@/db/enums/games.enum';
 
+export const TABLE_STORE_CONFIG = 'configuration';
+
 export interface ConfigurationStore {
-  idConfig: number;
+  idConfig: string;
   type: GAMES;
   currentRound: number;
-  currentPlayer: string;
+  currentPlayer: number;
+  totalPlayers: number;
   limitGameScore: number;
   limitGameRounds: number;
   eliminatedPlayersByRound: number;

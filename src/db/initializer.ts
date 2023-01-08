@@ -2,11 +2,11 @@ import { IDBPDatabase, openDB } from 'idb';
 
 import {
   DB_NAME,
-  TABLE_STORE_CONFIG,
-  TABLE_STORE_PLAYERS,
   DB_VERSION,
 } from '@/constants/db.constants';
 import { DBModel } from '@/model/db.model';
+import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
+import { TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
   if (!('indexedDB' in window)) {
@@ -18,19 +18,17 @@ export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
       if (!db.objectStoreNames.contains(TABLE_STORE_PLAYERS)) {
         db.createObjectStore(TABLE_STORE_PLAYERS, {
           keyPath: 'idPlayer',
-          autoIncrement: true,
         });
       }
       if (!db.objectStoreNames.contains(TABLE_STORE_CONFIG)) {
         db.createObjectStore(TABLE_STORE_CONFIG, {
           keyPath: 'idConfig',
-          autoIncrement: true,
         });
       }
     },
   });
 };
 
-export async function dbInstance(): Promise<IDBPDatabase<unknown>> {
-  return openDB(DB_NAME, DB_VERSION);
+export async function dbInstance(): Promise<IDBPDatabase<DBModel>> {
+  return openDB<DBModel>(DB_NAME, DB_VERSION);
 }
