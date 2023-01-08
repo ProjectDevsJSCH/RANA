@@ -13,7 +13,7 @@
 
         <div class="text-center">
           <p class="text-2xl">Turno de</p>
-          <p class="text-4xl font-bold">{{ currentPlayer }}</p>
+          <p class="text-4xl font-bold">{{ currentPlayer.name }}</p>
         </div>
       </div>
     </transition>
@@ -32,18 +32,20 @@
     <div class="mt-6">
       <ButtonComponent
         buttonClass="mx-auto block mt-3"
+        :disabled="!score"
+        @onClick="nextTurn"
       >
-        <p>Comenzar</p>
+        <p>Siguiente turno</p>
       </ButtonComponent>
       <ButtonComponent
         buttonClass="mx-auto block mt-3"
       >
-        <p>Comenzar</p>
+        <p>Saltar</p>
       </ButtonComponent>
       <ButtonComponent
         buttonClass="mx-auto block mt-3"
       >
-        <p>Comenzar</p>
+        <p>Editar posiciones</p>
       </ButtonComponent>
     </div>
   </div>
@@ -55,6 +57,7 @@ import {
 } from 'vue';
 
 import { GameApi } from '@/api/game.api';
+import { PlayerStore } from '@/model/tables/player.model';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
 
@@ -65,7 +68,7 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      currentPlayer: '',
+      currentPlayer: {} as PlayerStore,
       score: '',
       displayPlayer: false,
     });
@@ -82,11 +85,20 @@ export default defineComponent({
       }, 200);
     });
 
-    const linkPlayer = computed(() => `https://avatars.dicebear.com/api/bottts/${state.currentPlayer}.svg`);
+    const linkPlayer = computed(() => `https://avatars.dicebear.com/api/bottts/${state.currentPlayer.name}.svg`);
+
+    const nextTurn = async (): Promise<void> => {
+      try {
+        state.currentPlayer = await GameApi.setNextTurn(+state.score);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     return {
       ...toRefs(state),
       linkPlayer,
+      nextTurn,
     };
   },
 });

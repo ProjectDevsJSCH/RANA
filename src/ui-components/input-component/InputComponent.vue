@@ -5,6 +5,7 @@
       <input
         id="input"
         name="input"
+        autocomplete="off"
         :class="[inputClass, 'mt-2 cs__input rounded-lg p-2']"
         :type="inputType"
         :value="modelValue"
