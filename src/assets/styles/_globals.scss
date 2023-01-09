@@ -4,6 +4,15 @@
   outline: none;
 }
 
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;

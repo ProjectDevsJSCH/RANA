@@ -1,6 +1,9 @@
 <template>
   <div class="flex-1 m-3 mb-6 overflow-auto cs__players-list rounded-3xl p-7">
-    <draggable v-model="playerList" item-key="position">
+    <draggable
+      v-model="playerList"
+      item-key="position"
+    >
       <template #item="{ element }">
         <PlayerCard
           :playerName="element.name"

@@ -21,11 +21,11 @@ export class PlayerApi {
     );
   }
 
-  static async getAllSortedPlayers(): Promise<PlayerStore[]> {
+  static async getAllPlayers(): Promise<PlayerStore[]> {
     const db = await dbInstance();
     const allPlayers = await db.getAll(TABLE_STORE_PLAYERS);
 
-    return allPlayers.sort((a, b) => b.totalScore - a.totalScore);
+    return allPlayers.sort((a, b) => a.position - b.position);
   }
 
   static async cleanData(): Promise<void> {

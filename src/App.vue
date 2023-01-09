@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-2 px-6 pb-20 mx-auto cs__app">
+  <div class="flex flex-col p-2 px-2 pb-10 mx-auto cs__app">
     <img
       :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
       :src="require('@/assets/icons/frontal-frog.svg')"
@@ -59,10 +59,11 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   color: $dark;
   font-size: 14px;
+  flex: 1;
 }
 
 .cs__app {
-  min-height: 100vh;
+  min-height: 100%;
   max-width: 500px;
   background-image: linear-gradient(180deg, rgba(100, 100, 100, 0.063) 0%, rgba(100, 100, 100, 0.165) 100%);
 
