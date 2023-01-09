@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-2 pb-20 mx-auto cs__app">
+  <div class="flex flex-col p-2 px-6 pb-20 mx-auto cs__app">
     <img
       :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
       :src="require('@/assets/icons/frontal-frog.svg')"

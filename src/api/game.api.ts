@@ -41,6 +41,13 @@ export class GameApi {
     return currentConfigs[0].currentPlayer;
   }
 
+  static async getCurrentRound(): Promise<number> {
+    const db = await dbInstance();
+    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+
+    return currentConfigs[0].currentRound;
+  }
+
   static async setNextTurn(score: number): Promise<PlayerStore> {
     const db = await dbInstance();
     const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
@@ -51,6 +58,7 @@ export class GameApi {
       TABLE_STORE_PLAYERS,
       {
         ...currentPlayer,
+        totalScore: currentPlayer.totalScore + score,
         rounds: [
           ...currentPlayer.rounds,
           {

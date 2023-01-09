@@ -5,7 +5,7 @@
       alt=""
       class="w-4 h-4 ml-2"
     >
-    <p class="w-full px-3 py-3">
+    <p class="w-full px-3 py-3 overflow-hidden text-ellipsis">
       {{ playerName }}
     </p>
     <button class="px-3" @pointerdown="onEdit">
