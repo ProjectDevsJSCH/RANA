@@ -67,7 +67,7 @@ export default defineComponent({
   border-bottom: 1px solid $shadow;
 
   &:disabled {
-    opacity: 0.1;
+    opacity: 0.4;
     box-shadow: none;
   }
 }

@@ -2,8 +2,9 @@
   <transition v-show="showModal" name="modal">
     <div class="absolute top-0 left-0 cs__modal-mask">
       <div ref="content" :class="[containerClass, 'cs__modal__content p-2']">
-        <button class="absolute bg-white rounded-full -right-3 -top-3"
-                @click="onCloseModal"
+        <button
+          class="absolute bg-white rounded-full -right-3 -top-3"
+          @click="onCloseModal"
         >
           <img :src="require('@/assets/icons/closeIcon.svg')" alt="">
         </button>
@@ -14,6 +15,7 @@
 </template>
 
 <script lang="ts">
+import { onClickOutside } from '@vueuse/core';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -31,6 +33,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const content = ref(null);
+
+    onClickOutside(content, () => emit('onCloseModal'));
 
     const onCloseModal = (): void => {
       emit('onCloseModal');

@@ -35,8 +35,9 @@
       <InputComponent
         v-model="inputScore"
         placeholder="0"
-        class="w-80"
+        class="w-60"
         :inputType="'number'"
+        @keyup.enter="nextTurn"
       >
         <template #label>
           <span class="font-bold">Puntaje</span>
@@ -46,7 +47,7 @@
 
     <div>
       <ButtonComponent
-        buttonClass="mx-auto block mt-3"
+        buttonClass="mx-auto block my-3"
         :disabled="!inputScore"
         @onClick="nextTurn"
       >
@@ -60,10 +61,18 @@
       </ButtonComponent> -->
       <ButtonComponent
         buttonClass="mx-auto block mt-3"
+        @onClick="onOpenPositionsModal"
       >
         <p>Posiciones</p>
       </ButtonComponent>
     </div>
+
+    <ModalComponent
+      :showModal="showPositionsModal"
+      @onCloseModal="onClosePositionsModal"
+    >
+      <PositionsList />
+    </ModalComponent>
   </div>
 </template>
 
@@ -73,15 +82,18 @@ import {
 } from 'vue';
 
 import { GameApi } from '@/api/game.api';
-import { PlayerApi } from '@/api/player.api';
+import PositionsList from '@/components/positions-list/PositionsList.vue';
 import { PlayerStore } from '@/model/tables/player.model';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
+import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
 
 export default defineComponent({
   components: {
     InputComponent,
     ButtonComponent,
+    ModalComponent,
+    PositionsList,
   },
   setup() {
     const state = reactive({
@@ -90,6 +102,7 @@ export default defineComponent({
       totalScore: 0,
       currentRound: -1,
       displayPlayer: false,
+      showPositionsModal: false,
     });
 
     onBeforeMount(async () => {
@@ -109,6 +122,8 @@ export default defineComponent({
     const linkPlayer = computed(() => `https://avatars.dicebear.com/api/bottts/${state.currentPlayer.name}.svg`);
 
     const nextTurn = async (): Promise<void> => {
+      state.displayPlayer = false;
+
       try {
         state.currentPlayer = await GameApi.setNextTurn(+state.inputScore);
         state.currentRound = await GameApi.getCurrentRound();
@@ -117,12 +132,26 @@ export default defineComponent({
       } catch (error) {
         console.error(error);
       }
+
+      setTimeout(() => {
+        state.displayPlayer = true;
+      }, 200);
+    };
+
+    const onClosePositionsModal = (): void => {
+      state.showPositionsModal = false;
+    };
+
+    const onOpenPositionsModal = (): void => {
+      state.showPositionsModal = true;
     };
 
     return {
       ...toRefs(state),
       linkPlayer,
       nextTurn,
+      onOpenPositionsModal,
+      onClosePositionsModal,
     };
   },
 });

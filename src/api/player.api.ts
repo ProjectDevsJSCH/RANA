@@ -1,6 +1,6 @@
 import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { dbInstance } from '@/db/initializer';
-import { TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
+import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export class PlayerApi {
   static async addPlayers(players: PlayerInformation[]): Promise<void> {
@@ -19,6 +19,13 @@ export class PlayerApi {
         tx.done,
       ],
     );
+  }
+
+  static async getAllSortedPlayers(): Promise<PlayerStore[]> {
+    const db = await dbInstance();
+    const allPlayers = await db.getAll(TABLE_STORE_PLAYERS);
+
+    return allPlayers.sort((a, b) => b.totalScore - a.totalScore);
   }
 
   static async cleanData(): Promise<void> {
