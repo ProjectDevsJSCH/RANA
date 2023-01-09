@@ -9,6 +9,7 @@
           <div class="text-center">
             <p class="text-2xl">Turno de</p>
             <p class="overflow-hidden text-4xl font-bold w-96 text-ellipsis">{{ currentPlayer.name }}</p>
+            <p class="mt-2 text-xs italic">Se prepara <span class="font-bold">{{ nextPlayerName }}</span></p>
           </div>
           <div class="flex items-center mt-5">
             <img
@@ -112,6 +113,7 @@ export default defineComponent({
   setup() {
     const state = reactive({
       currentPlayer: {} as PlayerStore,
+      nextPlayerName: '',
       inputScore: '',
       totalScore: 0,
       currentRound: -1,
@@ -127,6 +129,7 @@ export default defineComponent({
         state.currentPlayer = await GameApi.getCurrentPlayer();
         state.currentRound = await GameApi.getCurrentRound();
         state.totalScore = state.currentPlayer.totalScore;
+        state.nextPlayerName = await GameApi.getNextPlayerName();
       } catch (error) {
         console.error(error);
       }
@@ -145,6 +148,7 @@ export default defineComponent({
         state.currentPlayer = await GameApi.setNextTurn(+state.inputScore);
         state.totalScore = state.currentPlayer.totalScore;
         state.currentRound = await GameApi.getCurrentRound();
+        state.nextPlayerName = await GameApi.getNextPlayerName();
       } catch (error) {
         console.error(error);
       }

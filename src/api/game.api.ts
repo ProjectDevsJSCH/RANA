@@ -99,6 +99,17 @@ export class GameApi {
     };
   }
 
+  static async getNextPlayerName(): Promise<string> {
+    const db = await dbInstance();
+    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
+    const { currentPlayer } = currentConfig;
+
+    const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1)
+      || await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1);
+
+    return nextPlayer!.name;
+  }
+
   static async cleanData(): Promise<void> {
     const db = await dbInstance();
     await db.clear(TABLE_STORE_CONFIG);

@@ -1,7 +1,7 @@
 <template>
   <button
     :style="composedClasses"
-    :class="[buttonClass, 'py-3 m-1 rounded-lg cs__button']"
+    :class="[buttonClass, 'py-3 m-1 rounded-lg cs__button shadow-md']"
     :disabled="disabled"
     @click="onClick"
   >
