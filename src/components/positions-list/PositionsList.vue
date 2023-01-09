@@ -68,17 +68,22 @@ export default defineComponent({
       currentRound: 0,
     });
 
-    onBeforeMount(async () => {
+    const updatePositionsList = async (): Promise<void> => {
       try {
         state.totalPlayers = await PlayerApi.getAllSortedPlayers();
         state.currentRound = await GameApi.getCurrentRound();
       } catch (error) {
         console.error(error);
       }
+    };
+
+    onBeforeMount(async () => {
+      await updatePositionsList();
     });
 
     return {
       ...toRefs(state),
+      updatePositionsList,
     };
   },
 });

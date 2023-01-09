@@ -71,14 +71,19 @@
       :showModal="showPositionsModal"
       @onCloseModal="onClosePositionsModal"
     >
-      <PositionsList />
+      <PositionsList ref="positionsList" />
     </ModalComponent>
   </div>
 </template>
 
 <script lang="ts">
 import {
-  defineComponent, onBeforeMount, reactive, toRefs, computed,
+  defineComponent,
+  onBeforeMount,
+  reactive,
+  toRefs,
+  computed,
+  ref,
 } from 'vue';
 
 import { GameApi } from '@/api/game.api';
@@ -105,6 +110,8 @@ export default defineComponent({
       showPositionsModal: false,
     });
 
+    const positionsList = ref<InstanceType<typeof PositionsList> | null>(null);
+
     onBeforeMount(async () => {
       try {
         state.currentPlayer = await GameApi.getCurrentPlayer();
@@ -128,10 +135,12 @@ export default defineComponent({
         state.currentPlayer = await GameApi.setNextTurn(+state.inputScore);
         state.currentRound = await GameApi.getCurrentRound();
         state.totalScore = state.currentPlayer.totalScore;
-        state.inputScore = '';
       } catch (error) {
         console.error(error);
       }
+
+      state.inputScore = '';
+      positionsList.value?.updatePositionsList();
 
       setTimeout(() => {
         state.displayPlayer = true;
@@ -152,6 +161,7 @@ export default defineComponent({
       nextTurn,
       onOpenPositionsModal,
       onClosePositionsModal,
+      positionsList,
     };
   },
 });
