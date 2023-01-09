@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center justify-around flex-1">
-    <transition name="show">
+  <div class="flex flex-col items-center justify-around flex-1 overflow-hidden">
+    <transition name="slide">
       <div
         v-if="displayPlayer"
         class="mt-10"
@@ -28,22 +28,20 @@
             </div>
           </div>
         </div>
+
+        <InputComponent
+          v-model="inputScore"
+          placeholder="0"
+          class="mx-auto mt-5 w-60"
+          :inputType="'number'"
+          @keyup.enter="nextTurn"
+        >
+          <template #label>
+            <span class="font-bold">Puntaje</span>
+          </template>
+        </InputComponent>
       </div>
     </transition>
-
-    <div>
-      <InputComponent
-        v-model="inputScore"
-        placeholder="0"
-        class="mt-0 w-60"
-        :inputType="'number'"
-        @keyup.enter="nextTurn"
-      >
-        <template #label>
-          <span class="font-bold">Puntaje</span>
-        </template>
-      </InputComponent>
-    </div>
 
     <div>
       <ButtonComponent
@@ -61,7 +59,7 @@
       </ButtonComponent> -->
       <ButtonComponent
         buttonClass="mx-auto block mt-3"
-        @onClick="onOpenPositionsModal"
+        @onClick="onPositionsModalChange(true)"
       >
         <p>Posiciones</p>
       </ButtonComponent>
@@ -69,7 +67,7 @@
 
     <ModalComponent
       :showModal="showPositionsModal"
-      @onCloseModal="onClosePositionsModal"
+      @onCloseModal="onPositionsModalChange(false)"
     >
       <PositionsList ref="positionsList" />
     </ModalComponent>
@@ -147,20 +145,15 @@ export default defineComponent({
       }, 200);
     };
 
-    const onClosePositionsModal = (): void => {
-      state.showPositionsModal = false;
-    };
-
-    const onOpenPositionsModal = (): void => {
-      state.showPositionsModal = true;
+    const onPositionsModalChange = (value: boolean): void => {
+      state.showPositionsModal = value;
     };
 
     return {
       ...toRefs(state),
       linkPlayer,
       nextTurn,
-      onOpenPositionsModal,
-      onClosePositionsModal,
+      onPositionsModalChange,
       positionsList,
     };
   },
