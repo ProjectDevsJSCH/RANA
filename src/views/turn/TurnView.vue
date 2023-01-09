@@ -35,7 +35,7 @@
       <InputComponent
         v-model="inputScore"
         placeholder="0"
-        class="w-60"
+        class="mt-0 w-60"
         :inputType="'number'"
         @keyup.enter="nextTurn"
       >
