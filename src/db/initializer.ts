@@ -16,9 +16,11 @@ export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
   return openDB<DBModel>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(TABLE_STORE_PLAYERS)) {
-        db.createObjectStore(TABLE_STORE_PLAYERS, {
+        const playersStore = db.createObjectStore(TABLE_STORE_PLAYERS, {
           keyPath: 'idPlayer',
         });
+
+        playersStore.createIndex('byPosition', 'position', { unique: true });
       }
       if (!db.objectStoreNames.contains(TABLE_STORE_CONFIG)) {
         db.createObjectStore(TABLE_STORE_CONFIG, {

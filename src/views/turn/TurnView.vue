@@ -90,6 +90,7 @@ export default defineComponent({
     const nextTurn = async (): Promise<void> => {
       try {
         state.currentPlayer = await GameApi.setNextTurn(+state.score);
+        state.score = '';
       } catch (error) {
         console.error(error);
       }

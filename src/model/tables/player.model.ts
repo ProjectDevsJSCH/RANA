@@ -7,8 +7,9 @@ interface Round {
 export const TABLE_STORE_PLAYERS = 'players';
 
 export interface PlayerStore {
-  idPlayer: number;
+  idPlayer: string;
   name: string;
+  position: number;
   totalScore: number;
   rounds: Round[];
 }

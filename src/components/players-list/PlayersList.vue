@@ -4,7 +4,7 @@
       <template #item="{ element }">
         <PlayerCard
           :playerName="element.name"
-          :playerId="element.playerId"
+          :idPlayer="element.idPlayer"
           @onDelete="onDelete"
           @onEdit="onEdit"
         >
@@ -18,7 +18,7 @@
       :showModal="showModal"
       @onCloseModal="onCloseModal"
     >
-      <InputComponent v-model="currentPlayer">
+      <InputComponent v-model="currentPlayerName">
         <template #label>
           <span class="font-bold">Nombre</span>
         </template>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash';
+import _, { uniqueId } from 'lodash';
 import {
   computed,
   defineComponent,
@@ -62,7 +62,7 @@ import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
 
 import PlayerCard from '../player-card/PlayerCard.vue';
 
-import { PlayerInformation } from './interface';
+import { PlayerInformation } from './player-information.interface';
 
 export default defineComponent({
   name: 'PlayersList',
@@ -87,58 +87,61 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const state = reactive({
-      currentPlayer: '',
+      currentPlayerName: '',
       playerList: [] as Array<PlayerInformation>,
-      playerToEdit: -1,
+      idPlayerToEdit: '',
     });
 
-    const disabled = computed(() => state.currentPlayer === '');
+    const disabled = computed(() => state.currentPlayerName === '');
 
     const onCloseModal = (): void => {
       emit('onModalChange', false);
     };
 
     const createPlayer = (): void => {
-      if (state.currentPlayer === '') return;
-
-      const maxId = state.playerList
-        .reduce((max, player) => (player.playerId > max ? player.playerId : max), 0);
+      if (state.currentPlayerName === '') return;
 
       state.playerList.push({
-        playerId: maxId + 1,
-        name: state.currentPlayer,
+        idPlayer: uniqueId(),
+        name: state.currentPlayerName,
+        position: state.playerList.length + 1,
       });
 
       onCloseModal();
     };
 
     const updatePlayer = (): void => {
-      if (state.currentPlayer === '') return;
+      if (state.currentPlayerName === '') return;
 
-      state.playerList.find((player) => player.playerId === state.playerToEdit)!.name = state.currentPlayer;
+      state.playerList.find((player) => player.idPlayer === state.idPlayerToEdit)!.name = state.currentPlayerName;
 
       onCloseModal();
     };
 
-    const onDelete = (playerId: number): void => {
-      state.playerList = state.playerList.filter((player) => player.playerId !== playerId);
+    const onDelete = (idPlayer: string): void => {
+      state.playerList = state.playerList.filter((player) => player.idPlayer !== idPlayer);
     };
 
-    const onEdit = (playerId: number, playerName: string): void => {
-      state.playerToEdit = playerId;
-      state.currentPlayer = playerName;
+    const onEdit = (idPlayer: string, playerName: string): void => {
+      state.idPlayerToEdit = idPlayer;
+      state.currentPlayerName = playerName;
 
       emit('onEdit');
     };
 
     watch(() => _.cloneDeep(state.playerList), (newValue): void => {
+      // reset positions before sending to parent
+      state.playerList.forEach((player, index) => {
+        player.position = index + 1;
+      });
+
       emit('onPlayerListChange', newValue);
     });
 
     watch(() => props.showModal, (newValue): void => {
-      if (newValue) {
-        state.currentPlayer = '';
-        state.playerToEdit = -1;
+      if (newValue && props.mode === 'create') {
+        state.currentPlayerName = '';
+        state.idPlayerToEdit = '';
       }
     });
 

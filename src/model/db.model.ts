@@ -5,11 +5,14 @@ import { PlayerStore, TABLE_STORE_PLAYERS } from './tables/player.model';
 
 export interface DBModel extends DBSchema {
   [TABLE_STORE_PLAYERS]: {
-    key: number;
+    key: string;
     value: PlayerStore;
+    indexes: {
+      byPosition: number
+    };
   };
   [TABLE_STORE_CONFIG]: {
-    key: number;
+    key: string;
     value: ConfigurationStore;
   };
 }

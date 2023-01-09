@@ -1,4 +1,4 @@
-import uniqid from 'uniqid';
+import { uniqueId } from 'lodash';
 
 import { GAMES } from '@/db/enums/games.enum';
 import { dbInstance } from '@/db/initializer';
@@ -9,16 +9,23 @@ export class GameApi {
   static async setNewGame(
     selectedOption: GAMES,
     value: string,
-    firstPlayerId: number,
     numberOfPlayers: number,
   ): Promise<void> {
     const db = await dbInstance();
 
+    const firstPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1) || {
+      idPlayer: '-1',
+      name: 'null',
+      position: -1,
+      totalScore: -1,
+      rounds: [],
+    };
+
     await db.add(TABLE_STORE_CONFIG, {
-      idConfig: uniqid(),
+      idConfig: uniqueId(),
       type: selectedOption,
       currentRound: 1,
-      currentPlayer: firstPlayerId,
+      currentPlayer: firstPlayer,
       totalPlayers: numberOfPlayers,
       limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? +value : 0,
       limitGameRounds: selectedOption === GAMES.ROUND_LIMIT ? +value : 0,
@@ -30,21 +37,14 @@ export class GameApi {
   static async getCurrentPlayer(): Promise<PlayerStore> {
     const db = await dbInstance();
     const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
-    const player = await db.get(TABLE_STORE_PLAYERS, currentConfigs[0].currentPlayer) || {
-      idPlayer: -1,
-      name: '',
-      totalScore: 0,
-      rounds: [],
-    };
 
-    return player;
+    return currentConfigs[0].currentPlayer;
   }
 
   static async setNextTurn(score: number): Promise<PlayerStore> {
     const db = await dbInstance();
     const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
-    const allPlayers = await db.getAll(TABLE_STORE_PLAYERS);
-    const currentPlayer = await this.getCurrentPlayer();
+    const { currentPlayer } = currentConfig;
 
     // Update current player round information
     await db.put(
@@ -61,20 +61,20 @@ export class GameApi {
       },
     );
 
-    const nextPlayerId = currentPlayer.idPlayer + 1 > allPlayers.length ? 1 : currentPlayer.idPlayer + 1;
-    const nextPlayer = await db.get(TABLE_STORE_PLAYERS, nextPlayerId);
+    const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1)
+      || await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1);
 
     // Update current player in config store
     // Update current round in config store
     if (nextPlayer) {
-      const roundUpdate = nextPlayerId === 1 ? currentConfig.currentRound + 1 : currentConfig.currentRound;
+      const roundUpdate = nextPlayer.position === 1 ? currentConfig.currentRound + 1 : currentConfig.currentRound;
 
       await db.put(
         TABLE_STORE_CONFIG,
         {
           ...currentConfig,
           currentRound: roundUpdate,
-          currentPlayer: nextPlayer.idPlayer,
+          currentPlayer: nextPlayer,
         },
       );
 
@@ -83,8 +83,9 @@ export class GameApi {
 
     // Flag of game is finished
     return {
-      idPlayer: -1,
+      idPlayer: '',
       name: '',
+      position: -1,
       totalScore: 0,
       rounds: [],
     };

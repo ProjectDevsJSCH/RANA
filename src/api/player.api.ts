@@ -1,4 +1,4 @@
-import { PlayerInformation } from '@/components/players-list/interface';
+import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { dbInstance } from '@/db/initializer';
 import { TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
@@ -10,8 +10,9 @@ export class PlayerApi {
     await Promise.all(
       [
         ...players.map((player) => tx.store.add({
-          idPlayer: player.playerId,
+          idPlayer: player.idPlayer,
           name: player.name,
+          position: player.position,
           totalScore: 0,
           rounds: [],
         })),

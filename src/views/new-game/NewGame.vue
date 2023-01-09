@@ -39,7 +39,7 @@ import { GameApi } from '@/api/game.api';
 import { PlayerApi } from '@/api/player.api';
 import GameSelection from '@/components/game-selection/GameSelection.vue';
 import PlayersList from '@/components/players-list/PlayersList.vue';
-import { PlayerInformation } from '@/components/players-list/interface';
+import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { GAMES } from '@/db/enums/games.enum';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
@@ -89,8 +89,8 @@ export default defineComponent({
 
     const onSubmit = async (selectedOption: GAMES, value: string): Promise<void> => {
       try {
-        await GameApi.setNewGame(selectedOption, value, state.playerList[0].playerId, state.playerList.length);
         await PlayerApi.addPlayers(state.playerList);
+        await GameApi.setNewGame(selectedOption, value, state.playerList.length);
       } catch (error) {
         return;
       }
