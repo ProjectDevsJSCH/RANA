@@ -6,6 +6,13 @@ import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
 import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export class GameApi {
+  static async checkIfGameIsPlaying(): Promise<boolean> {
+    const db = await dbInstance();
+    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+
+    return currentConfigs.length > 0;
+  }
+
   static async setNewGame(
     selectedOption: GAMES,
     value: string,
@@ -99,15 +106,14 @@ export class GameApi {
     };
   }
 
-  static async getNextPlayerName(): Promise<string> {
+  static async getNextPlayerName(): Promise<string | undefined> {
     const db = await dbInstance();
     const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
     const { currentPlayer } = currentConfig;
 
-    const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1)
-      || await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1);
+    const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1);
 
-    return nextPlayer!.name;
+    return nextPlayer?.name || undefined;
   }
 
   static async cleanData(): Promise<void> {

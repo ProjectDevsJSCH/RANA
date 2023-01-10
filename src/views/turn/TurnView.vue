@@ -1,80 +1,92 @@
 <template>
-  <div>
-    <div class="flex flex-col items-center overflow-hidden">
-      <transition name="slide">
-        <div
-          v-if="displayPlayer"
-          class="mt-20"
-        >
-          <div v-if="!hasFinishedRound">
-            <div class="text-center">
-              <p class="text-2xl">Turno de</p>
-              <p class="overflow-hidden text-4xl font-bold text-ellipsis">{{ currentPlayer.name }}</p>
-              <p class="mt-2 text-xs italic">Se prepara <span class="font-bold">{{ nextPlayerName }}</span></p>
-            </div>
-            <div class="flex items-center justify-center mt-5">
-              <img
-                class="w-40 h-40 p-3 m-3 bg-black rounded-full"
-                :src="linkPlayer"
-                alt="Jugador actual"
-              >
-              <div class="flex justify-between p-2 mt-4 font-bold text-center bg-white rounded drop-shadow-lg">
-                <div class="mr-4 text-left">
-                  <p>Puntaje total</p>
-                  <p>Ronda</p>
-                </div>
-                <div>
-                  <p>{{ totalScore }}</p>
-                  <p>{{ currentRound }}</p>
+  <div class="flex flex-1">
+    <div class="flex items-center justify-center flex-1 overflow-hidden">
+      <div class="flex flex-col items-center">
+        <transition name="slide">
+          <div
+            v-if="displayPlayer"
+            class="mt-10"
+          >
+            <div v-if="!hasFinishedRound">
+              <div class="text-center">
+                <p class="text-2xl">Turno de</p>
+                <p class="overflow-hidden text-4xl font-bold text-ellipsis">{{ currentPlayer.name }}</p>
+                <p
+                  v-if="nextPlayerName"
+                  class="mt-2 text-xs italic"
+                >
+                  Se prepara <span class="font-bold">{{ nextPlayerName }}</span>
+                </p>
+                <p
+                  v-else
+                  class="font-bold"
+                >
+                  Último jugador
+                </p>
+              </div>
+              <div class="flex items-center justify-center mt-5">
+                <img
+                  class="w-40 h-40 p-3 m-3 bg-black rounded-full"
+                  :src="linkPlayer"
+                  alt="Jugador actual"
+                >
+                <div class="flex justify-between p-2 mt-4 font-bold text-center bg-white rounded drop-shadow-lg">
+                  <div class="mr-4 text-left">
+                    <p>Puntaje total</p>
+                    <p>Ronda</p>
+                  </div>
+                  <div>
+                    <p>{{ totalScore }}</p>
+                    <p>{{ currentRound }}</p>
+                  </div>
                 </div>
               </div>
+              <InputComponent
+                v-model="inputScore"
+                placeholder="0"
+                class="mx-auto mt-5 w-60"
+                :inputType="'number'"
+                @keyup.enter="nextTurn"
+              >
+                <template #label>
+                  <span class="font-bold">Puntaje</span>
+                </template>
+              </InputComponent>
             </div>
-            <InputComponent
-              v-model="inputScore"
-              placeholder="0"
-              class="mx-auto mt-5 w-60"
-              :inputType="'number'"
-              @keyup.enter="nextTurn"
-            >
-              <template #label>
-                <span class="font-bold">Puntaje</span>
-              </template>
-            </InputComponent>
+            <div v-else>
+              <p class="text-base font-bold text-center">Ronda terminada</p>
+              <ButtonComponent
+                buttonClass="mx-auto block mt-3"
+                @onClick="continueNextRound"
+              >
+                Continuar
+              </ButtonComponent>
+            </div>
           </div>
-          <div v-else>
-            <p class="text-base font-bold text-center">Ronda terminada</p>
-            <ButtonComponent
-              buttonClass="mx-auto block mt-3"
-              @onClick="continueNextRound"
-            >
-              Continuar
-            </ButtonComponent>
-          </div>
-        </div>
-      </transition>
+        </transition>
 
-      <ButtonComponent
-        v-if="!hasFinishedRound"
-        buttonClass="mx-auto block my-3 mt-10"
-        :disabled="!inputScore"
-        @onClick="nextTurn"
-      >
-        <p>Siguiente turno</p>
-      </ButtonComponent>
-      <ButtonComponent
-        buttonClass="mx-auto block mt-3"
-        @onClick="moveToPositions"
-      >
-        <p>Posiciones</p>
-      </ButtonComponent>
+        <ButtonComponent
+          v-if="!hasFinishedRound"
+          buttonClass="mx-auto block my-3 mt-10"
+          :disabled="!inputScore"
+          @onClick="nextTurn"
+        >
+          <p>Siguiente turno</p>
+        </ButtonComponent>
+        <ButtonComponent
+          buttonClass="mx-auto block mt-3"
+          @onClick="moveToPositions"
+        >
+          <p>Posiciones</p>
+        </ButtonComponent>
       <!-- <ButtonComponent
         buttonClass="mx-auto block mt-3"
         :disabled="true"
-      >
+        >
         <p>Saltar</p>
       </ButtonComponent> -->
+      </div>
     </div>
-
     <transition name="slide">
       <PositionsList
         ref="positionsList"
@@ -110,7 +122,7 @@ export default defineComponent({
   setup() {
     const state = reactive({
       currentPlayer: {} as PlayerStore,
-      nextPlayerName: '',
+      nextPlayerName: '' as string | undefined,
       inputScore: '',
       totalScore: 0,
       currentRound: -1,

@@ -2,7 +2,7 @@
   <div
     v-if="props.showPositions"
     id="positionsList"
-    class="absolute top-0 left-0 z-10 w-full max-h-screen cs__positions-list py-14"
+    class="absolute top-0 left-0 z-10 w-screen overflow-hidden cs__positions-list py-14"
   >
     <div class="mx-auto overflow-x-auto rounded-lg w-80">
       <table

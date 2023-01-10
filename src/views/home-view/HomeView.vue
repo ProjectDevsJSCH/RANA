@@ -8,6 +8,7 @@
     </ButtonComponent>
 
     <ButtonComponent
+      v-if="isThereAnActiveGame"
       class="text-center"
       @onClick="continueGame"
     >
@@ -17,7 +18,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  onBeforeMount,
+} from 'vue';
 import { useRouter } from 'vue-router';
 
 import { GameApi } from '@/api/game.api';
@@ -28,7 +34,15 @@ export default defineComponent({
   name: 'HomeView',
   components: { ButtonComponent },
   setup() {
+    const state = reactive({
+      isThereAnActiveGame: false,
+    });
+
     const router = useRouter();
+
+    onBeforeMount(async () => {
+      state.isThereAnActiveGame = await GameApi.checkIfGameIsPlaying();
+    });
 
     const newGame = async (): Promise<void> => {
       await PlayerApi.cleanData();
@@ -38,10 +52,14 @@ export default defineComponent({
     };
 
     const continueGame = (): void => {
-      console.log('w');
+      router.push({ name: 'CurrentTurn' });
     };
 
-    return { newGame, continueGame };
+    return {
+      ...toRefs(state),
+      newGame,
+      continueGame,
+    };
   },
 });
 </script>
