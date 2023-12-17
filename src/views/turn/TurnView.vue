@@ -5,7 +5,7 @@
         <transition name="slide">
           <div
             v-if="displayPlayer"
-            class="mt-10"
+            class="mt-5"
           >
             <div v-if="!hasFinishedRound">
               <div class="text-center">
@@ -23,33 +23,37 @@
                   </button>
                   <p class="overflow-hidden text-4xl font-bold text-ellipsis">{{ currentPlayer.name }}</p>
                 </div>
-                <p
-                  v-if="nextPlayerName"
-                  class="mt-2 text-xs italic"
-                >
-                  Se prepara <span class="font-bold">{{ nextPlayerName }}</span>
-                </p>
-                <p
-                  v-else
-                  class="font-bold"
-                >
-                  Último jugador
-                </p>
               </div>
-              <div class="flex items-center justify-center mt-5">
+              <div class="flex items-center justify-center mt-5 drop-shadow-lg">
                 <img
-                  class="w-40 h-40 p-2 m-3 bg-white rounded-full"
+                  class="z-20 w-40 h-40 p-2 m-3 -mr-6 bg-white rounded-full"
                   :src="linkPlayer"
                   alt="Jugador actual"
                 >
-                <div class="flex justify-between p-2 mt-4 font-bold text-center bg-white rounded drop-shadow-lg">
-                  <div class="mr-4 text-left">
-                    <p>Puntaje total</p>
-                    <p>Ronda</p>
+                <div class="flex flex-col justify-between max-w-[200px] p-2 pl-6 text-center bg-white rounded-xl drop-shadow-lg">
+                  <div class="flex">
+                    <div class="mr-4 font-bold text-right">
+                      <p>Puntaje total</p>
+                      <p>Ronda</p>
+                    </div>
+                    <div class="text-left">
+                      <p>{{ totalScore }}</p>
+                      <p>{{ currentRound }}</p>
+                    </div>
                   </div>
                   <div>
-                    <p>{{ totalScore }}</p>
-                    <p>{{ currentRound }}</p>
+                    <p
+                      v-if="nextPlayerName"
+                      class="mt-2 text-xs italic text-center"
+                    >
+                      Siguiente: <span class="font-bold">{{ nextPlayerName }}</span>
+                    </p>
+                    <p
+                      v-else
+                      class="font-bold"
+                    >
+                      Último jugador
+                    </p>
                   </div>
                 </div>
               </div>
@@ -79,14 +83,14 @@
 
         <ButtonComponent
           v-if="!hasFinishedRound"
-          buttonClass="mx-auto block my-3 mt-10"
+          buttonClass="mx-auto block my-2 mt-14"
           :disabled="!inputScore"
           @onClick="nextTurn"
         >
           <p>Siguiente turno</p>
         </ButtonComponent>
         <ButtonComponent
-          buttonClass="mx-auto block mt-3"
+          buttonClass="mx-auto block mt-2"
           @onClick="moveToPositions"
         >
           <p>Posiciones</p>

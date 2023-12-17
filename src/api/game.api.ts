@@ -110,7 +110,6 @@ export class GameApi {
     const db = await dbInstance();
     const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
     const { currentPlayer } = currentConfig;
-
     const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1);
 
     return nextPlayer?.name || undefined;
@@ -118,6 +117,7 @@ export class GameApi {
 
   static async cleanData(): Promise<void> {
     const db = await dbInstance();
+
     await db.clear(TABLE_STORE_CONFIG);
   }
 }
