@@ -10,7 +10,19 @@
             <div v-if="!hasFinishedRound">
               <div class="text-center">
                 <p class="text-2xl">Turno de</p>
-                <p class="overflow-hidden text-4xl font-bold text-ellipsis">{{ currentPlayer.name }}</p>
+                <div class="flex items-center justify-center">
+                  <button
+                    class="px-3"
+                    @pointerdown="onEdit"
+                  >
+                    <img
+                      :src="require('@/assets/icons/edit.svg')"
+                      alt=""
+                      class="block w-5 h-5"
+                    >
+                  </button>
+                  <p class="overflow-hidden text-4xl font-bold text-ellipsis">{{ currentPlayer.name }}</p>
+                </div>
                 <p
                   v-if="nextPlayerName"
                   class="mt-2 text-xs italic"
@@ -26,7 +38,7 @@
               </div>
               <div class="flex items-center justify-center mt-5">
                 <img
-                  class="w-40 h-40 p-3 m-3 bg-black rounded-full"
+                  class="w-40 h-40 p-2 m-3 bg-white rounded-full"
                   :src="linkPlayer"
                   alt="Jugador actual"
                 >
@@ -94,6 +106,23 @@
         @onClosePositions="showPositions = false"
       />
     </transition>
+    <ModalComponent
+      containerClass="p-8 w-80"
+      :showModal="showModal"
+      @onCloseModal="onCloseModal"
+    >
+      <InputComponent v-model="inputPlayerName">
+        <template #label>
+          <span class="font-bold">Nombre</span>
+        </template>
+      </InputComponent>
+      <ButtonComponent
+        class="block mx-auto mt-6 text-center"
+        @onClick="updatePlayer"
+      >
+        <span>Editar jugador</span>
+      </ButtonComponent>
+    </ModalComponent>
   </div>
 </template>
 
@@ -108,20 +137,24 @@ import {
 } from 'vue';
 
 import { GameApi } from '@/api/game.api';
+import { PlayerApi } from '@/api/player.api';
 import PositionsList from '@/components/positions-list/PositionsList.vue';
 import { PlayerStore } from '@/model/tables/player.model';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
+import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
 
 export default defineComponent({
   components: {
     InputComponent,
     ButtonComponent,
+    ModalComponent,
     PositionsList,
   },
   setup() {
     const state = reactive({
       currentPlayer: {} as PlayerStore,
+      inputPlayerName: '',
       nextPlayerName: '' as string | undefined,
       inputScore: '',
       totalScore: 0,
@@ -129,9 +162,11 @@ export default defineComponent({
       displayPlayer: false,
       hasFinishedRound: false,
       showPositions: false,
+      showModal: false,
     });
 
     const positionsList = ref<InstanceType<typeof PositionsList> | null>(null);
+    const linkPlayer = computed(() => `https://api.dicebear.com/7.x/thumbs/svg?backgroundType=gradientLinear&seed=${state.currentPlayer.name}`);
 
     onBeforeMount(async () => {
       try {
@@ -147,8 +182,6 @@ export default defineComponent({
         state.displayPlayer = true;
       }, 200);
     });
-
-    const linkPlayer = computed(() => `https://avatars.dicebear.com/api/bottts/${state.currentPlayer.name}.svg`);
 
     const nextTurn = async (): Promise<void> => {
       state.displayPlayer = false;
@@ -187,12 +220,39 @@ export default defineComponent({
       state.showPositions = true;
     };
 
+    const onCloseModal = (): void => {
+      state.showModal = false;
+    };
+
+    const updatePlayer = async (): Promise<void> => {
+      if (state.inputPlayerName === '') return;
+
+      state.showModal = false;
+
+      try {
+        await PlayerApi.updatePlayerName(state.currentPlayer.idPlayer, state.inputPlayerName);
+        await positionsList.value?.updatePositionsList();
+
+        state.currentPlayer.name = state.inputPlayerName;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const onEdit = (): void => {
+      state.showModal = true;
+      state.inputPlayerName = state.currentPlayer.name;
+    };
+
     return {
       ...toRefs(state),
       linkPlayer,
       positionsList,
       nextTurn,
       continueNextRound,
+      onCloseModal,
+      updatePlayer,
+      onEdit,
       moveToPositions: displayPositions,
     };
   },

@@ -1,9 +1,12 @@
 import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { dbInstance } from '@/db/initializer';
+import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
 import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export class PlayerApi {
-  static async addPlayers(players: PlayerInformation[]): Promise<void> {
+  static async addPlayers(
+    players: PlayerInformation[],
+  ): Promise<void> {
     const db = await dbInstance();
     const tx = db.transaction(TABLE_STORE_PLAYERS, 'readwrite');
 
@@ -30,6 +33,24 @@ export class PlayerApi {
 
   static async cleanData(): Promise<void> {
     const db = await dbInstance();
+
     await db.clear(TABLE_STORE_PLAYERS);
+  }
+
+  static async updatePlayerName(
+    playerId: string,
+    playerName: string,
+  ): Promise<void> {
+    const db = await dbInstance();
+    const player = await db.get(TABLE_STORE_PLAYERS, playerId);
+    const gamePlayerInfo = await db.getAll(TABLE_STORE_CONFIG);
+
+    if (player) {
+      player.name = playerName;
+      gamePlayerInfo[0].currentPlayer.name = playerName;
+
+      await db.put(TABLE_STORE_PLAYERS, player);
+      await db.put(TABLE_STORE_CONFIG, gamePlayerInfo[0]);
+    }
   }
 }
