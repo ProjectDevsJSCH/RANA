@@ -17,37 +17,10 @@
             'bg-green-200': player.idPlayer === currentPlayer.idPlayer,
           }"
         >
-          <div class="flex items-center font-bold">
-            <p class="mr-4">{{ index + 1 }}.</p>
-            <img
-              class="p-1 mr-4 bg-white rounded-full w-14 h-14"
-              :src="getLinkPlayer(player)"
-              alt="Jugador actual"
-            >
-            <div class="flex items-end justify-between flex-1">
-              <div>
-                <p>{{ player.name }}</p>
-                <p class="text-gray-500">{{ player.totalScore }}</p>
-              </div>
-              <div class="ml-3">
-                <p
-                  class="text-blue-500 cursor-pointer"
-                  @click="openRoundsBoard(player.idPlayer)"
-                  @keydown="openRoundsBoard(player.idPlayer)"
-                >
-                  Rondas
-                  <i class="!border-blue-500 arrow arrow--down" />
-                </p>
-              </div>
-            </div>
-          </div>
-          <transition name="dropdown">
-            <RoundsBoard
-              :displayRoundsBoard="displayRoundsBoard"
-              :selectedPlayerId="selectedPlayerId"
-              :playerId="player.idPlayer"
-            />
-          </transition>
+          <PositionCard
+            :player="player"
+            :index="index"
+          />
         </div>
       </div>
     </div>
@@ -67,12 +40,15 @@ import {
 
 import { GameApi } from '@/api/game.api';
 import { PlayerApi } from '@/api/player.api';
-import RoundsBoard from '@/components/rounds-board/RoundsBoard.vue';
 import { PlayerStore } from '@/model/tables/player.model';
+
+import PositionCard from './PositionCard.vue';
 
 export default defineComponent({
   name: 'PositionsList',
-  components: { RoundsBoard },
+  components: {
+    PositionCard,
+  },
   props: {
     showPositions: {
       type: Boolean,
@@ -115,23 +91,12 @@ export default defineComponent({
 
     const sortedPlayers = computed(() => [...state.totalPlayers].sort((a, b) => b.totalScore - a.totalScore));
 
-    const getLinkPlayer = (
-      player: PlayerStore,
-    ): string => `https://api.dicebear.com/7.x/thumbs/svg?backgroundType=gradientLinear&seed=${player.name}`;
-
-    const openRoundsBoard = (playerId: string): void => {
-      state.displayRoundsBoard = !state.displayRoundsBoard;
-      state.selectedPlayerId = playerId;
-    };
-
     return {
       ...toRefs(state),
       props,
       sortedPlayers,
       updatePositionsList,
-      getLinkPlayer,
       content,
-      openRoundsBoard,
     };
   },
 });

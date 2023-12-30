@@ -12,6 +12,8 @@ import {
   computed,
 } from 'vue';
 
+import { PlayerStore } from '@/model/tables/player.model';
+
 export default defineComponent({
   name: 'RoundsBoard',
   props: {
@@ -23,8 +25,8 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    playerId: {
-      type: String,
+    player: {
+      type: Object as () => PlayerStore,
       required: true,
     },
   },
@@ -32,7 +34,7 @@ export default defineComponent({
     const state = reactive({
     });
 
-    const isAbleToDisplay = computed((): boolean => props.displayRoundsBoard && props.selectedPlayerId === props.playerId);
+    const isAbleToDisplay = computed((): boolean => props.displayRoundsBoard && props.selectedPlayerId === props.player.idPlayer);
 
     return {
       ...toRefs(state),
