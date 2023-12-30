@@ -1,4 +1,4 @@
-interface Round {
+export interface Round {
   number: number;
   score: number;
   played: boolean;

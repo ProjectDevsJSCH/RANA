@@ -1,6 +1,9 @@
 <template>
   <div>
-    <label for="input" class="flex flex-col">
+    <label
+      for="input"
+      class="flex flex-col"
+    >
       <slot name="label" />
       <input
         id="input"
