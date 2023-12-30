@@ -53,4 +53,25 @@ export class PlayerApi {
       await db.put(TABLE_STORE_CONFIG, gamePlayerInfo[0]);
     }
   }
+
+  static async updatePlayerRoundScore(
+    idPlayer: string,
+    idRound: number,
+    score: number,
+  ): Promise<void> {
+    const db = await dbInstance();
+    const player = await db.get(TABLE_STORE_PLAYERS, idPlayer);
+
+    if (player?.name) {
+      const playerRound = player.rounds.find((round) => round.number === idRound && round.played);
+
+      if (playerRound) {
+        playerRound.score = score;
+      }
+
+      player.totalScore = player.rounds.reduce((acc, round) => acc + round.score, 0);
+
+      await db.put(TABLE_STORE_PLAYERS, player);
+    }
+  }
 }

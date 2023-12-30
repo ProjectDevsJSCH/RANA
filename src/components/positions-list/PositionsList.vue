@@ -20,6 +20,7 @@
           <PositionCard
             :player="player"
             :index="index"
+            @update-player-score="updatePositionsList"
           />
         </div>
       </div>

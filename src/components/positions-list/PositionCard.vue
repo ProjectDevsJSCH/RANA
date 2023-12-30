@@ -29,6 +29,7 @@
         :displayRoundsBoard="displayRoundsBoard"
         :selectedPlayerId="selectedPlayerId"
         :player="player"
+        @update-round="onUpdateRound"
       />
     </transition>
   </div>
@@ -41,6 +42,7 @@ import {
   toRefs,
 } from 'vue';
 
+import { PlayerApi } from '@/api/player.api';
 import RoundsBoard from '@/components/rounds-board/RoundsBoard.vue';
 import { PlayerStore } from '@/model/tables/player.model';
 
@@ -59,7 +61,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const state = reactive({
       displayRoundsBoard: false,
       selectedPlayerId: '',
@@ -73,10 +75,21 @@ export default defineComponent({
       state.selectedPlayerId = playerId;
     };
 
+    const onUpdateRound = async (round: {
+      idPlayer: string,
+      roundNumber: number,
+      newScore: number,
+    }): Promise<void> => {
+      await PlayerApi.updatePlayerRoundScore(round.idPlayer, round.roundNumber, round.newScore);
+
+      await emit('update-player-score');
+    };
+
     return {
       ...toRefs(state),
       getLinkPlayer,
       openRoundsBoard,
+      onUpdateRound,
       props,
     };
   },

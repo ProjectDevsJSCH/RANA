@@ -4,6 +4,10 @@ export interface Round {
   played: boolean;
 }
 
+export interface NewRound extends Round {
+  newValue: string;
+}
+
 export const TABLE_STORE_PLAYERS = 'players';
 
 export interface PlayerStore {

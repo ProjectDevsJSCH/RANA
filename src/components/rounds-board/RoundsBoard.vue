@@ -17,6 +17,7 @@
             v-model="round.newValue"
             inputClass="w-14 h-6"
             inputType="number"
+            @change="debounceFunction(round)"
           />
         </div>
       </div>
@@ -25,6 +26,7 @@
 </template>
 
 <script lang="ts">
+import { useDebounceFn } from '@vueuse/core';
 import {
   defineComponent,
   reactive,
@@ -32,12 +34,8 @@ import {
   computed,
 } from 'vue';
 
-import { PlayerStore, Round } from '@/model/tables/player.model';
+import { NewRound, PlayerStore, Round } from '@/model/tables/player.model';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
-
-interface NewRound extends Round {
-  newValue: string;
-}
 
 export default defineComponent({
   name: 'RoundsBoard',
@@ -58,7 +56,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const state = reactive({
     });
 
@@ -67,10 +65,23 @@ export default defineComponent({
       .map((round: Round) => ({ ...round, newValue: `${round.score}` }))
       .sort((a: NewRound, b: NewRound) => b.number - a.number));
 
+    const debounceFunction = useDebounceFn((round: NewRound) => {
+      const score = parseInt(round.newValue, 10);
+
+      if (score) {
+        emit('update-round', {
+          idPlayer: props.player.idPlayer,
+          roundNumber: round.number,
+          newScore: score,
+        });
+      }
+    }, 500);
+
     return {
       ...toRefs(state),
       isAbleToDisplay,
       copyOfRounds,
+      debounceFunction,
       props,
     };
   },
