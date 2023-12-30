@@ -38,3 +38,19 @@
 .slide-leave-to {
   transform: translateX(-100%);
 }
+
+// dropdown transition
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+}
+.dropdown-enter-to,
+.dropdown-leave-from {
+  opacity: 1;
+}
+
+

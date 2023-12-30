@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "local": "npm run serve -- --port 8080"
+    "local": "npm run serve"
   },
   "dependencies": {
     "@types/lodash": "^4.14.182",

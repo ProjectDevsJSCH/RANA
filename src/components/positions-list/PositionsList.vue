@@ -24,11 +24,30 @@
               :src="getLinkPlayer(player)"
               alt="Jugador actual"
             >
-            <div>
-              <p>{{ player.name }}</p>
-              <p class="text-gray-500">{{ player.totalScore }}</p>
+            <div class="flex items-end justify-between flex-1">
+              <div>
+                <p>{{ player.name }}</p>
+                <p class="text-gray-500">{{ player.totalScore }}</p>
+              </div>
+              <div class="ml-3">
+                <p
+                  class="text-blue-500 cursor-pointer"
+                  @click="openRoundsBoard(player.idPlayer)"
+                  @keydown="openRoundsBoard(player.idPlayer)"
+                >
+                  Rondas
+                  <i class="!border-blue-500 arrow arrow--down" />
+                </p>
+              </div>
             </div>
           </div>
+          <transition name="dropdown">
+            <RoundsBoard
+              :displayRoundsBoard="displayRoundsBoard"
+              :selectedPlayerId="selectedPlayerId"
+              :playerId="player.idPlayer"
+            />
+          </transition>
         </div>
       </div>
     </div>
@@ -48,10 +67,12 @@ import {
 
 import { GameApi } from '@/api/game.api';
 import { PlayerApi } from '@/api/player.api';
+import RoundsBoard from '@/components/rounds-board/RoundsBoard.vue';
 import { PlayerStore } from '@/model/tables/player.model';
 
 export default defineComponent({
   name: 'PositionsList',
+  components: { RoundsBoard },
   props: {
     showPositions: {
       type: Boolean,
@@ -64,7 +85,12 @@ export default defineComponent({
       currentRound: 0,
       currentPlayer: {} as PlayerStore,
       playersScorePosition: [] as Array<number>,
+      displayRoundsBoard: false,
+      selectedPlayerId: '-1',
     });
+    const content = ref(null);
+
+    onClickOutside(content, () => emit('onClosePositions'));
 
     const updatePositionsList = async (): Promise<void> => {
       try {
@@ -93,9 +119,10 @@ export default defineComponent({
       player: PlayerStore,
     ): string => `https://api.dicebear.com/7.x/thumbs/svg?backgroundType=gradientLinear&seed=${player.name}`;
 
-    const content = ref(null);
-
-    onClickOutside(content, () => emit('onClosePositions'));
+    const openRoundsBoard = (playerId: string): void => {
+      state.displayRoundsBoard = !state.displayRoundsBoard;
+      state.selectedPlayerId = playerId;
+    };
 
     return {
       ...toRefs(state),
@@ -104,6 +131,7 @@ export default defineComponent({
       updatePositionsList,
       getLinkPlayer,
       content,
+      openRoundsBoard,
     };
   },
 });
