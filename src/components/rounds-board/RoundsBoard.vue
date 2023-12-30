@@ -75,7 +75,7 @@ export default defineComponent({
           newScore: score,
         });
       }
-    }, 500);
+    }, 1000);
 
     return {
       ...toRefs(state),
