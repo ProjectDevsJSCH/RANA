@@ -48,14 +48,14 @@ export default defineComponent({
 
 .cs__modal-mask {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: rgba($color: $dark, $alpha: 0.8);
   backdrop-filter: blur(2px);
 }
 
 .cs__modal__content {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
