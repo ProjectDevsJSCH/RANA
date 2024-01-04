@@ -52,6 +52,7 @@ import _, { uniqueId } from 'lodash';
 import {
   computed,
   defineComponent,
+  onBeforeMount,
   PropType,
   reactive,
   toRefs,
@@ -59,6 +60,7 @@ import {
 } from 'vue';
 import draggable from 'vuedraggable';
 
+import { PlayerApi } from '@/api/player.api';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
 import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
@@ -96,6 +98,16 @@ export default defineComponent({
     });
 
     const disabled = computed(() => state.currentPlayerName === '');
+
+    onBeforeMount(async () => {
+      const alreadyCreatedPlayers = await PlayerApi.getAllPlayers();
+
+      state.playerList = alreadyCreatedPlayers.map((player, index) => ({
+        idPlayer: player.idPlayer,
+        name: player.name,
+        position: index + 1,
+      }));
+    });
 
     const onCloseModal = (): void => {
       emit('onModalChange', false);

@@ -83,15 +83,31 @@ export default defineComponent({
       state.showGameModal = false;
     };
 
-    const onPlayerListChange = (playerList: Array<PlayerInformation>): void => {
+    const onPlayerListChange = (
+      playerList: Array<PlayerInformation>,
+    ): void => {
       state.playerList = playerList;
     };
 
-    const onSubmit = async (selectedOption: GAMES, value: string): Promise<void> => {
+    const onSubmit = async (
+      selectedOption: GAMES,
+      value: string,
+    ): Promise<void> => {
+      try {
+        await PlayerApi.cleanData();
+        await GameApi.cleanData();
+      } catch (error) {
+        console.log(error);
+
+        return;
+      }
+
       try {
         await PlayerApi.addPlayers(state.playerList);
         await GameApi.setNewGame(selectedOption, value, state.playerList.length);
       } catch (error) {
+        console.log(error);
+
         return;
       }
 
