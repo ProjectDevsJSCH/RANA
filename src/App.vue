@@ -1,5 +1,8 @@
 <template>
-  <div class="relative flex flex-col p-2 px-2 pb-10 mx-auto overflow-hidden cs__app">
+  <div
+    class="relative flex flex-col p-2 px-2 pb-10 mx-auto overflow-hidden cs__app"
+    :style="{ height: `${innerHeight}px` }"
+  >
     <img
       :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
       :src="require('@/assets/icons/frontal-frog.svg')"
@@ -24,8 +27,8 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
-
     const homeView = computed(() => route.name === 'HomeView');
+    const innerHeight = computed(() => window.innerHeight);
 
     onBeforeMount(async () => {
       await dbInitializer();
@@ -45,6 +48,7 @@ export default defineComponent({
       homeView,
       routeHome,
       home,
+      innerHeight,
     };
   },
 });
@@ -63,7 +67,6 @@ export default defineComponent({
 }
 
 .cs__app {
-  min-height: 100%;
   max-width: 500px;
   background-image: linear-gradient(180deg, rgba(100, 100, 100, 0.063) 0%, rgba(100, 100, 100, 0.165) 100%);
 

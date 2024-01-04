@@ -89,16 +89,16 @@
         </ButtonComponent>
         <ButtonComponent
           buttonClass="mx-auto block mt-2"
-          @onClick="moveToPositions"
+          @onClick="displayPositions"
         >
           <p>Posiciones</p>
         </ButtonComponent>
-      <!-- <ButtonComponent
-        buttonClass="mx-auto block mt-3"
-        :disabled="true"
+        <ButtonComponent
+          buttonClass="mx-auto block mt-3"
+          @onClick="moreOptions"
         >
-        <p>Saltar</p>
-      </ButtonComponent> -->
+          <p>Más</p>
+        </ButtonComponent>
       </div>
     </div>
     <transition name="slide">
@@ -125,6 +125,18 @@
         <span>Editar jugador</span>
       </ButtonComponent>
     </ModalComponent>
+    <ModalComponent
+      containerClass="p-8 w-80"
+      :showModal="showModalMoreOptions"
+      @onCloseModal="showModalMoreOptions = false"
+    >
+      <ButtonComponent
+        class="block mx-auto mt-6 text-center"
+        @onClick="redirectToNewGame"
+      >
+        <span>Reiniciar juego</span>
+      </ButtonComponent>
+    </ModalComponent>
   </div>
 </template>
 
@@ -137,6 +149,7 @@ import {
   computed,
   ref,
 } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { GameApi } from '@/api/game.api';
 import { PlayerApi } from '@/api/player.api';
@@ -164,10 +177,12 @@ export default defineComponent({
       hasFinishedRound: false,
       showPositions: false,
       showModal: false,
+      showModalMoreOptions: false,
     });
 
     const positionsList = ref<InstanceType<typeof PositionsList> | null>(null);
     const linkPlayer = computed(() => `https://api.dicebear.com/7.x/thumbs/svg?backgroundType=gradientLinear&seed=${state.currentPlayer.name}`);
+    const router = useRouter();
 
     onBeforeMount(async () => {
       try {
@@ -243,6 +258,14 @@ export default defineComponent({
       state.inputPlayerName = state.currentPlayer.name;
     };
 
+    const moreOptions = (): void => {
+      state.showModalMoreOptions = true;
+    };
+
+    const redirectToNewGame = (): void => {
+      router.push({ name: 'NewGame' });
+    };
+
     return {
       ...toRefs(state),
       linkPlayer,
@@ -252,7 +275,9 @@ export default defineComponent({
       onCloseModal,
       updatePlayer,
       onEdit,
-      moveToPositions: displayPositions,
+      displayPositions,
+      moreOptions,
+      redirectToNewGame,
     };
   },
 });
