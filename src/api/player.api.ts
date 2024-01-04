@@ -61,6 +61,7 @@ export class PlayerApi {
   ): Promise<void> {
     const db = await dbInstance();
     const player = await db.get(TABLE_STORE_PLAYERS, idPlayer);
+    const [gameState] = await db.getAll(TABLE_STORE_CONFIG);
 
     if (player?.name) {
       const playerRound = player.rounds.find((round) => round.number === idRound && round.played);
@@ -72,6 +73,12 @@ export class PlayerApi {
       player.totalScore = player.rounds.reduce((acc, round) => acc + round.score, 0);
 
       await db.put(TABLE_STORE_PLAYERS, player);
+    }
+
+    if (gameState?.idConfig && gameState.currentPlayer.idPlayer === idPlayer) {
+      gameState!.currentPlayer = player!;
+
+      await db.put(TABLE_STORE_CONFIG, gameState);
     }
   }
 }

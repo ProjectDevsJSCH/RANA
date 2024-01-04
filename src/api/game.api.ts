@@ -55,7 +55,9 @@ export class GameApi {
     return currentConfigs[0].currentRound;
   }
 
-  static async setNextTurn(score: number): Promise<PlayerStore> {
+  static async setNextTurn(
+    score: number,
+  ): Promise<PlayerStore> {
     const db = await dbInstance();
     const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
     const { currentPlayer } = currentConfig;
