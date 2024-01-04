@@ -33,11 +33,9 @@
                 <div class="flex flex-col justify-between max-w-[200px] p-2 pl-6 text-center bg-white rounded-xl drop-shadow-lg">
                   <div class="flex">
                     <div class="mr-4 font-bold text-right">
-                      <p>Puntaje total</p>
                       <p>Ronda</p>
                     </div>
                     <div class="text-left">
-                      <p>{{ totalScore }}</p>
                       <p>{{ currentRound }}</p>
                     </div>
                   </div>
@@ -161,7 +159,6 @@ export default defineComponent({
       inputPlayerName: '',
       nextPlayerName: '' as string | undefined,
       inputScore: '',
-      totalScore: 0,
       currentRound: -1,
       displayPlayer: false,
       hasFinishedRound: false,
@@ -176,7 +173,6 @@ export default defineComponent({
       try {
         state.currentPlayer = await GameApi.getCurrentPlayer();
         state.currentRound = await GameApi.getCurrentRound();
-        state.totalScore = state.currentPlayer.totalScore;
         state.nextPlayerName = await GameApi.getNextPlayerName();
       } catch (error) {
         console.error(error);
@@ -192,7 +188,6 @@ export default defineComponent({
 
       try {
         state.currentPlayer = await GameApi.setNextTurn(+state.inputScore);
-        state.totalScore = state.currentPlayer.totalScore;
         state.currentRound = await GameApi.getCurrentRound();
         state.nextPlayerName = await GameApi.getNextPlayerName();
       } catch (error) {
