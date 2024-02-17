@@ -122,4 +122,60 @@ export class GameApi {
 
     await db.clear(TABLE_STORE_CONFIG);
   }
+
+  static async checkGameWinner(): Promise<string> {
+    const db = await dbInstance();
+    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
+    const {
+      type, limitGameScore, limitGameRounds, eliminatedPlayersByRound,
+    } = currentConfig;
+    let w = '';
+
+    if (type === GAMES.SCORE_LIMIT) {
+      const players = await db.getAll(TABLE_STORE_PLAYERS);
+      const winner = players.filter((player) => player.totalScore >= limitGameScore)
+        .sort((a, b) => b.totalScore - a.totalScore)[0];
+      console.log('winner', winner);
+      console.log('players', players);
+
+      if (winner) {
+        w = winner.name;
+
+        await db.put(TABLE_STORE_CONFIG, {
+          ...currentConfig,
+          winner: winner.name,
+        });
+      }
+    }
+
+    if (type === GAMES.ROUND_LIMIT) {
+      if (currentConfig.currentRound > limitGameRounds) {
+        const players = await db.getAll(TABLE_STORE_PLAYERS);
+        const winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
+
+        w = winner.name;
+
+        await db.put(TABLE_STORE_CONFIG, {
+          ...currentConfig,
+          winner: winner.name,
+        });
+      }
+    }
+
+    if (type === GAMES.PLAYOFFS) {
+      if (currentConfig.currentRound > eliminatedPlayersByRound) {
+        const players = await db.getAll(TABLE_STORE_PLAYERS);
+        const winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
+
+        w = winner.name;
+
+        await db.put(TABLE_STORE_CONFIG, {
+          ...currentConfig,
+          winner: winner.name,
+        });
+      }
+    }
+
+    return w;
+  }
 }

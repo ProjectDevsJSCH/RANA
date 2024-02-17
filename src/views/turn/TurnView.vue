@@ -68,13 +68,26 @@
               </InputComponent>
             </div>
             <div v-else>
-              <p class="text-base font-bold text-center">Ronda terminada</p>
-              <ButtonComponent
-                buttonClass="mx-auto block mt-3"
-                @onClick="continueNextRound"
+              <div v-if="winner === ''">
+                <p class="text-base font-bold text-center">Ronda terminada</p>
+                <ButtonComponent
+                  buttonClass="mx-auto block mt-3"
+                  @onClick="continueNextRound"
+                >
+                  Continuar
+                </ButtonComponent>
+              </div>
+              <div
+                v-else
+                class="my-5"
               >
-                Continuar
-              </ButtonComponent>
+                <p class="text-2xl font-bold text-center">Ganador</p>
+                <p class="text-4xl font-bold text-center">{{ winner }}</p>
+                <VueLottiePlayer
+                  loop
+                  :animationData="require('@/assets/animations/winner.json')"
+                />
+              </div>
             </div>
           </div>
         </transition>
@@ -142,13 +155,14 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   onBeforeMount,
   reactive,
-  toRefs,
-  computed,
   ref,
+  toRefs,
 } from 'vue';
+import VueLottiePlayer from 'vue-lottie-player';
 import { useRouter } from 'vue-router';
 
 import { GameApi } from '@/api/game.api';
@@ -165,10 +179,12 @@ export default defineComponent({
     ButtonComponent,
     ModalComponent,
     PositionsList,
+    VueLottiePlayer,
   },
   setup() {
     const state = reactive({
       currentPlayer: {} as PlayerStore,
+      winner: '',
       inputPlayerName: '',
       nextPlayerName: '' as string | undefined,
       inputScore: '',
@@ -214,6 +230,8 @@ export default defineComponent({
 
       if (state.currentPlayer.position === 1) {
         state.hasFinishedRound = true;
+        state.winner = await GameApi.checkGameWinner();
+        console.log('winner', state.winner);
       }
 
       setTimeout(() => {
