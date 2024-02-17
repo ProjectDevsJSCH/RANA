@@ -1,4 +1,6 @@
-# rana
+# Rana Score Tracker
+
+Score tracking app for the game Rana
 
 ## Project setup
 ```
