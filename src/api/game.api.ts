@@ -135,8 +135,6 @@ export class GameApi {
       const players = await db.getAll(TABLE_STORE_PLAYERS);
       const winner = players.filter((player) => player.totalScore >= limitGameScore)
         .sort((a, b) => b.totalScore - a.totalScore)[0];
-      console.log('winner', winner);
-      console.log('players', players);
 
       if (winner) {
         w = winner.name;
