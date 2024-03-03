@@ -62,9 +62,9 @@ export default defineComponent({
     };
 
     return {
+      ...toRefs(state),
       onClick,
       composedClasses,
-      ...toRefs(state),
     };
   },
 });
