@@ -2,6 +2,7 @@
   <div class="flex flex-col items-center justify-center flex-1 cs__home">
     <ButtonComponent
       class="mb-4 text-center"
+      :appendExitTransition="true"
       @onClick="newGame"
     >
       <span>Juego nuevo</span>

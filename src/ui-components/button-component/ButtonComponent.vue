@@ -40,6 +40,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    appendExitTransition: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { emit }) {
     const state = reactive({
@@ -54,11 +58,13 @@ export default defineComponent({
     }));
 
     const onClick = (): void => {
-      state.innerClasses = ' slide-out-blurred-top';
+      if (props.appendExitTransition) {
+        state.innerClasses = 'puff-out-center';
+      }
 
       setTimeout(() => {
         emit('onClick');
-      }, 500);
+      }, 350);
     };
 
     return {
@@ -98,48 +104,40 @@ export default defineComponent({
   transition: all 0.3s ease-in-out;
 }
 
-.slide-out-blurred-top {
-  -webkit-animation: slide-out-blurred-top 0.45s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
-        animation: slide-out-blurred-top 0.45s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
+.puff-out-center {
+  -webkit-animation: puff-out-center 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) both;
+        animation: puff-out-center 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) both;
 }
 
-@-webkit-keyframes slide-out-blurred-top {
+@-webkit-keyframes puff-out-center {
   0% {
-    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
-            transform: translateY(0) scaleY(1) scaleX(1);
-    -webkit-transform-origin: 50% 0%;
-            transform-origin: 50% 0%;
-    -webkit-filter: blur(0);
-            filter: blur(0);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateY(-1000px) scaleY(2) scaleX(0.2);
-            transform: translateY(-1000px) scaleY(2) scaleX(0.2);
-    -webkit-transform-origin: 50% 0%;
-            transform-origin: 50% 0%;
-    -webkit-filter: blur(40px);
-            filter: blur(40px);
+    -webkit-transform: scale(2);
+            transform: scale(2);
+    -webkit-filter: blur(4px);
+            filter: blur(4px);
     opacity: 0;
   }
 }
-@keyframes slide-out-blurred-top {
+@keyframes puff-out-center {
   0% {
-    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
-            transform: translateY(0) scaleY(1) scaleX(1);
-    -webkit-transform-origin: 50% 0%;
-            transform-origin: 50% 0%;
-    -webkit-filter: blur(0);
-            filter: blur(0);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateY(-1000px) scaleY(2) scaleX(0.2);
-            transform: translateY(-1000px) scaleY(2) scaleX(0.2);
-    -webkit-transform-origin: 50% 0%;
-            transform-origin: 50% 0%;
-    -webkit-filter: blur(40px);
-            filter: blur(40px);
+    -webkit-transform: scale(2);
+            transform: scale(2);
+    -webkit-filter: blur(4px);
+            filter: blur(4px);
     opacity: 0;
   }
 }
