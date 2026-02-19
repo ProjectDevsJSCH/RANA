@@ -40,6 +40,7 @@ import {
   defineComponent,
   reactive,
   toRefs,
+  watch,
 } from 'vue';
 
 import { GAMES } from '@/db/enums/games.enum';
@@ -96,14 +97,21 @@ export default defineComponent({
       }
     });
 
-    const disabled = computed(() => state.value === '');
+    const parsedValue = computed(() => Number.parseInt(state.value, 10));
+    const isValidValue = computed(() => Number.isInteger(parsedValue.value) && parsedValue.value > 0);
+    const disabled = computed(() => !isValidValue.value);
+
+    watch(() => state.selectedOption, () => {
+      state.value = '';
+    });
 
     const onCloseModal = (): void => {
       emit('onCloseModal');
     };
 
     const onClick = (): void => {
-      emit('onSubmit', state.selectedOption, state.value);
+      if (!isValidValue.value) return;
+      emit('onSubmit', state.selectedOption, `${parsedValue.value}`);
     };
 
     return {

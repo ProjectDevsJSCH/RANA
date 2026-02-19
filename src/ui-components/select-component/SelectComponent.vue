@@ -6,6 +6,7 @@
     >
       <slot name="label" />
       <select
+        :value="modelValue"
         :class="[selectClass, 'mt-2 cs__select p-2 rounded-lg']"
         @change="onChange"
       >

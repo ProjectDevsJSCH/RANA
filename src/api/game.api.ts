@@ -19,6 +19,8 @@ export class GameApi {
     numberOfPlayers: number,
   ): Promise<void> {
     const db = await dbInstance();
+    const parsedValue = Number.parseInt(value, 10);
+    const safeValue = Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : 1;
 
     const firstPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1) || {
       idPlayer: '-1',
@@ -34,9 +36,9 @@ export class GameApi {
       currentRound: 1,
       currentPlayer: firstPlayer,
       totalPlayers: numberOfPlayers,
-      limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? +value : 0,
-      limitGameRounds: selectedOption === GAMES.ROUND_LIMIT ? +value : 0,
-      eliminatedPlayersByRound: selectedOption === GAMES.PLAYOFFS ? +value : 0,
+      limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? safeValue : 0,
+      limitGameRounds: selectedOption === GAMES.ROUND_LIMIT ? safeValue : 0,
+      eliminatedPlayersByRound: selectedOption === GAMES.PLAYOFFS ? safeValue : 0,
       winner: '',
     });
   }
