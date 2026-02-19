@@ -69,6 +69,17 @@
         <div v-else>
           <div v-if="gameWinner === ''">
             <p class="text-base font-bold text-center">Ronda terminada</p>
+            <div
+              v-if="hasRoundNotice"
+              class="max-w-xs px-3 py-2 mx-auto mt-3 text-xs rounded-lg cs__round-notice"
+            >
+              <p v-if="eliminatedPlayersText">
+                Eliminado(s): <span class="font-bold">{{ eliminatedPlayersText }}</span>
+              </p>
+              <p v-if="tieBreakPlayersText" class="mt-1">
+                Deben desempatar: <span class="font-bold">{{ tieBreakPlayersText }}</span>
+              </p>
+            </div>
             <ButtonComponent
               buttonClass="mx-auto block mt-3"
               aria-label="Continuar a la siguiente ronda"
@@ -187,6 +198,7 @@ export default defineComponent({
       advanceTurn,
       checkWinner,
       clearError,
+      lastRoundNotice,
     } = useGame();
 
     const state = reactive({
@@ -198,6 +210,12 @@ export default defineComponent({
     });
 
     const linkPlayer = computed(() => `https://api.dicebear.com/7.x/thumbs/svg?backgroundType=gradientLinear&seed=${gameCurrentPlayer.value.name}`);
+    const eliminatedPlayersText = computed(() => lastRoundNotice.value.eliminatedPlayers.join(', '));
+    const tieBreakPlayersText = computed(() => lastRoundNotice.value.tieBreakPlayers.join(', '));
+    const hasRoundNotice = computed(() => (
+      lastRoundNotice.value.roundNumber > 0
+      && (lastRoundNotice.value.eliminatedPlayers.length > 0 || lastRoundNotice.value.tieBreakPlayers.length > 0)
+    ));
 
     onBeforeMount(async () => {
       await loadGameState();
@@ -274,6 +292,10 @@ export default defineComponent({
       gameWinner,
       gameIsLoading,
       gameError,
+      lastRoundNotice,
+      hasRoundNotice,
+      eliminatedPlayersText,
+      tieBreakPlayersText,
       onEdit,
       linkPlayer,
       nextTurn,
@@ -325,5 +347,10 @@ export default defineComponent({
     font-size: 16px;
     padding: 0 4px;
   }
+}
+
+.cs__round-notice {
+  background-color: $accent-light;
+  border: 1px solid $accent;
 }
 </style>

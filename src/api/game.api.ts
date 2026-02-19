@@ -2,10 +2,77 @@ import { uniqueId } from 'lodash';
 
 import { GAMES } from '@/db/enums/games.enum';
 import { dbInstance } from '@/db/initializer';
-import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
+import { RoundNotice, TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
 import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
 export class GameApi {
+  private static getScoreByRound(player: PlayerStore, roundNumber: number): number {
+    const playerRound = player.rounds.find((round) => round.number === roundNumber);
+
+    return playerRound?.score ?? 0;
+  }
+
+  private static comparePlayersForElimination(
+    a: PlayerStore,
+    b: PlayerStore,
+    currentRound: number,
+  ): number {
+    for (let round = currentRound; round >= 1; round -= 1) {
+      const scoreA = GameApi.getScoreByRound(a, round);
+      const scoreB = GameApi.getScoreByRound(b, round);
+
+      if (scoreA !== scoreB) {
+        // Lower score is eliminated first.
+        return scoreA - scoreB;
+      }
+    }
+
+    // Final tiebreaker: deterministic by id.
+    return a.idPlayer.localeCompare(b.idPlayer);
+  }
+
+  private static getPlayersToEliminate(
+    players: PlayerStore[],
+    eliminatedPlayersByRound: number,
+    currentRound: number,
+  ): { playersToEliminate: PlayerStore[]; tieBreakPlayers: PlayerStore[] } {
+    const maxEliminations = Math.min(eliminatedPlayersByRound, players.length - 1);
+
+    if (maxEliminations <= 0) {
+      return { playersToEliminate: [], tieBreakPlayers: [] };
+    }
+
+    const sortedByScore = [...players].sort((a, b) => a.totalScore - b.totalScore);
+    const playersToEliminate: PlayerStore[] = [];
+    let tieBreakPlayers: PlayerStore[] = [];
+    let index = 0;
+
+    while (index < sortedByScore.length && playersToEliminate.length < maxEliminations) {
+      const currentScore = sortedByScore[index].totalScore;
+      const tiedGroup: PlayerStore[] = [];
+
+      while (index < sortedByScore.length && sortedByScore[index].totalScore === currentScore) {
+        tiedGroup.push(sortedByScore[index]);
+        index += 1;
+      }
+
+      const remainingSlots = maxEliminations - playersToEliminate.length;
+
+      if (tiedGroup.length <= remainingSlots) {
+        playersToEliminate.push(...tiedGroup);
+      } else {
+        // Tie in the elimination cut: apply round-based tiebreaker.
+        const resolvedTiedGroup = [...tiedGroup]
+          .sort((a, b) => GameApi.comparePlayersForElimination(a, b, currentRound));
+        tieBreakPlayers = resolvedTiedGroup;
+
+        playersToEliminate.push(...resolvedTiedGroup.slice(0, remainingSlots));
+      }
+    }
+
+    return { playersToEliminate, tieBreakPlayers };
+  }
+
   static async checkIfGameIsPlaying(): Promise<boolean> {
     const db = await dbInstance();
     const count = await db.count(TABLE_STORE_CONFIG);
@@ -34,6 +101,12 @@ export class GameApi {
       idConfig: uniqueId(),
       type: selectedOption,
       currentRound: 1,
+      lastProcessedRoundForPlayoffs: 0,
+      lastRoundNotice: {
+        eliminatedPlayers: [],
+        tieBreakPlayers: [],
+        roundNumber: 0,
+      },
       currentPlayer: firstPlayer,
       totalPlayers: numberOfPlayers,
       limitGameScore: selectedOption === GAMES.SCORE_LIMIT ? safeValue : 0,
@@ -137,10 +210,24 @@ export class GameApi {
     await db.clear(TABLE_STORE_CONFIG);
   }
 
+  static async getLastRoundNotice(): Promise<RoundNotice> {
+    const { config } = await GameApi.getConfig();
+
+    return config.lastRoundNotice || {
+      eliminatedPlayers: [],
+      tieBreakPlayers: [],
+      roundNumber: 0,
+    };
+  }
+
   static async checkGameWinner(): Promise<string> {
     const { db, config } = await GameApi.getConfig();
     const {
-      type, limitGameScore, limitGameRounds, eliminatedPlayersByRound,
+      type,
+      limitGameScore,
+      limitGameRounds,
+      eliminatedPlayersByRound,
+      lastProcessedRoundForPlayoffs = 0,
     } = config;
 
     let winner: PlayerStore | undefined;
@@ -157,9 +244,55 @@ export class GameApi {
       winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
     }
 
-    if (type === GAMES.PLAYOFFS && config.currentRound > eliminatedPlayersByRound) {
+    if (type === GAMES.PLAYOFFS) {
       const players = await db.getAll(TABLE_STORE_PLAYERS);
-      winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
+      const finishedRound = config.currentRound - 1;
+
+      if (players.length <= 1) {
+        [winner] = players;
+      } else if (finishedRound > lastProcessedRoundForPlayoffs) {
+        const { playersToEliminate, tieBreakPlayers } = GameApi.getPlayersToEliminate(
+          players,
+          eliminatedPlayersByRound,
+          finishedRound,
+        );
+        const eliminatedIds = new Set(playersToEliminate.map((player) => player.idPlayer));
+        const survivors = players
+          .filter((player) => !eliminatedIds.has(player.idPlayer))
+          .sort((a, b) => a.position - b.position)
+          .map((player, index) => ({ ...player, position: index + 1 }));
+
+        const tx = db.transaction([TABLE_STORE_PLAYERS, TABLE_STORE_CONFIG], 'readwrite');
+        const playersStore = tx.objectStore(TABLE_STORE_PLAYERS);
+        const configStore = tx.objectStore(TABLE_STORE_CONFIG);
+
+        await Promise.all(playersToEliminate.map((player) => playersStore.delete(player.idPlayer)));
+        await Promise.all(survivors.map((player) => playersStore.put(player)));
+
+        const [firstSurvivor] = survivors;
+        const nextWinner = survivors.length === 1 ? firstSurvivor : undefined;
+
+        await configStore.put({
+          ...config,
+          currentPlayer: firstSurvivor,
+          totalPlayers: survivors.length,
+          lastProcessedRoundForPlayoffs: finishedRound,
+          lastRoundNotice: {
+            eliminatedPlayers: playersToEliminate.map((player) => player.name),
+            tieBreakPlayers: tieBreakPlayers.map((player) => player.name),
+            roundNumber: finishedRound,
+          },
+          winner: nextWinner?.name || '',
+        });
+
+        await tx.done;
+
+        if (nextWinner) {
+          return nextWinner.name;
+        }
+
+        return '';
+      }
     }
 
     if (winner) {
