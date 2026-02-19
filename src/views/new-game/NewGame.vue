@@ -10,6 +10,7 @@
     <div class="flex flex-col items-center justify-center pb-4">
       <ButtonComponent
         class="mb-4 text-center"
+        aria-label="Añadir un nuevo jugador"
         @onClick="addPlayer"
       >
         <span>Añadir jugador</span>
@@ -17,6 +18,7 @@
 
       <ButtonComponent
         class="text-center"
+        aria-label="Comenzar el juego"
         @onClick="begin"
       >
         <span>Comenzar</span>
@@ -39,8 +41,8 @@ import { GameApi } from '@/api/game.api';
 import { PlayerApi } from '@/api/player.api';
 import GameSelection from '@/components/game-selection/GameSelection.vue';
 import PlayersList from '@/components/players-list/PlayersList.vue';
-import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { GAMES } from '@/db/enums/games.enum';
+import { PlayerInformation } from '@/model/player-information.model';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 
 export default defineComponent({
@@ -97,7 +99,7 @@ export default defineComponent({
         await PlayerApi.cleanData();
         await GameApi.cleanData();
       } catch (error) {
-        console.log(error);
+        console.error('Error cleaning data:', error);
 
         return;
       }
@@ -106,7 +108,7 @@ export default defineComponent({
         await PlayerApi.addPlayers(state.playerList);
         await GameApi.setNewGame(selectedOption, value, state.playerList.length);
       } catch (error) {
-        console.log(error);
+        console.error('Error setting up game:', error);
 
         return;
       }

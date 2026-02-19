@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, reactive, toRefs,
+  defineComponent, PropType,
 } from 'vue';
 
 import { SelectOptions } from './interface';
@@ -47,15 +47,11 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const state = reactive({
-    });
-
     const onChange = (event: Event): void => {
       emit('update:modelValue', (event.target as HTMLInputElement).value as string);
     };
 
     return {
-      ...toRefs(state),
       onChange,
       props,
     };
@@ -65,11 +61,20 @@ export default defineComponent({
 
 <style lang='scss' scoped>
 @import '@/assets/styles/variables';
-@import '@/assets/styles/mixins';
 
 .cs__select {
-  border: 1px solid $shadow;
+  border: 1.5px solid $shadow;
   background-color: white;
-}
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
 
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-light;
+    outline: none;
+  }
+}
 </style>

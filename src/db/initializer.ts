@@ -8,12 +8,18 @@ import { DBModel } from '@/model/db.model';
 import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
 import { TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
+let cachedDb: IDBPDatabase<DBModel> | null = null;
+
 export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
   if (!('indexedDB' in window)) {
     throw new Error('Browser does not support IndexedDB');
   }
 
-  return openDB<DBModel>(DB_NAME, DB_VERSION, {
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  cachedDb = await openDB<DBModel>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(TABLE_STORE_PLAYERS)) {
         const playersStore = db.createObjectStore(TABLE_STORE_PLAYERS, {
@@ -29,8 +35,14 @@ export const dbInitializer = async (): Promise<IDBPDatabase<DBModel>> => {
       }
     },
   });
+
+  return cachedDb;
 };
 
 export async function dbInstance(): Promise<IDBPDatabase<DBModel>> {
-  return openDB<DBModel>(DB_NAME, DB_VERSION);
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  return dbInitializer();
 }

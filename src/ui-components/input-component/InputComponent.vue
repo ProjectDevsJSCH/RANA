@@ -55,11 +55,23 @@ export default defineComponent({
 
 <style lang='scss' scoped>
 @import '@/assets/styles/variables';
-@import '@/assets/styles/mixins';
 
 .cs__input {
   background-color: white;
-  border: 1px solid $shadow;
-}
+  border: 1.5px solid $shadow;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-light;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $shadow;
+  }
+}
 </style>

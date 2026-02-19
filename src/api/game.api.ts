@@ -8,9 +8,9 @@ import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 export class GameApi {
   static async checkIfGameIsPlaying(): Promise<boolean> {
     const db = await dbInstance();
-    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+    const count = await db.count(TABLE_STORE_CONFIG);
 
-    return currentConfigs.length > 0;
+    return count > 0;
   }
 
   static async setNewGame(
@@ -41,64 +41,77 @@ export class GameApi {
     });
   }
 
-  static async getCurrentPlayer(): Promise<PlayerStore> {
+  private static async getConfig(): Promise<{ db: Awaited<ReturnType<typeof dbInstance>>; config: import('@/model/tables/configuration.model').ConfigurationStore }> {
     const db = await dbInstance();
-    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+    const configs = await db.getAll(TABLE_STORE_CONFIG);
 
-    return currentConfigs[0].currentPlayer;
+    if (!configs.length) {
+      throw new Error('No hay configuración de juego activa');
+    }
+
+    return { db, config: configs[0] };
+  }
+
+  static async getCurrentPlayer(): Promise<PlayerStore> {
+    const { config } = await GameApi.getConfig();
+
+    return config.currentPlayer;
   }
 
   static async getCurrentRound(): Promise<number> {
-    const db = await dbInstance();
-    const currentConfigs = await db.getAll(TABLE_STORE_CONFIG);
+    const { config } = await GameApi.getConfig();
 
-    return currentConfigs[0].currentRound;
+    return config.currentRound;
   }
 
   static async setNextTurn(
     score: number,
   ): Promise<PlayerStore> {
     const db = await dbInstance();
-    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
+    const tx = db.transaction([TABLE_STORE_PLAYERS, TABLE_STORE_CONFIG], 'readwrite');
+    const playersStore = tx.objectStore(TABLE_STORE_PLAYERS);
+    const configStore = tx.objectStore(TABLE_STORE_CONFIG);
+
+    const allConfigs = await configStore.getAll();
+    const currentConfig = allConfigs[0];
     const { currentPlayer } = currentConfig;
 
     // Update current player round information
-    await db.put(
-      TABLE_STORE_PLAYERS,
-      {
-        ...currentPlayer,
-        totalScore: currentPlayer.totalScore + score,
-        rounds: [
-          ...currentPlayer.rounds,
-          {
-            number: currentConfig.currentRound,
-            score,
-            played: true,
-          }],
-      },
-    );
-
-    const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1)
-      || await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', 1);
-
-    // Update current player in config store
-    // Update current round in config store
-    if (nextPlayer) {
-      const roundUpdate = nextPlayer.position === 1 ? currentConfig.currentRound + 1 : currentConfig.currentRound;
-
-      await db.put(
-        TABLE_STORE_CONFIG,
+    await playersStore.put({
+      ...currentPlayer,
+      totalScore: currentPlayer.totalScore + score,
+      rounds: [
+        ...currentPlayer.rounds,
         {
-          ...currentConfig,
-          currentRound: roundUpdate,
-          currentPlayer: nextPlayer,
+          number: currentConfig.currentRound,
+          score,
+          played: true,
         },
-      );
+      ],
+    });
+
+    const nextPlayer = await playersStore.index('byPosition').get(currentPlayer.position + 1)
+      || await playersStore.index('byPosition').get(1);
+
+    if (nextPlayer) {
+      const roundUpdate = nextPlayer.position === 1
+        ? currentConfig.currentRound + 1
+        : currentConfig.currentRound;
+
+      await configStore.put({
+        ...currentConfig,
+        currentRound: roundUpdate,
+        currentPlayer: nextPlayer,
+      });
+
+      await tx.done;
 
       return nextPlayer;
     }
 
-    // Flag of game is finished
+    await tx.done;
+
+    // Flag: game is finished
     return {
       idPlayer: '',
       name: '',
@@ -109,9 +122,8 @@ export class GameApi {
   }
 
   static async getNextPlayerName(): Promise<string | undefined> {
-    const db = await dbInstance();
-    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
-    const { currentPlayer } = currentConfig;
+    const { db, config } = await GameApi.getConfig();
+    const { currentPlayer } = config;
     const nextPlayer = await db.getFromIndex(TABLE_STORE_PLAYERS, 'byPosition', currentPlayer.position + 1);
 
     return nextPlayer?.name || undefined;
@@ -124,56 +136,39 @@ export class GameApi {
   }
 
   static async checkGameWinner(): Promise<string> {
-    const db = await dbInstance();
-    const currentConfig = (await db.getAll(TABLE_STORE_CONFIG))[0];
+    const { db, config } = await GameApi.getConfig();
     const {
       type, limitGameScore, limitGameRounds, eliminatedPlayersByRound,
-    } = currentConfig;
-    let w = '';
+    } = config;
+
+    let winner: PlayerStore | undefined;
 
     if (type === GAMES.SCORE_LIMIT) {
       const players = await db.getAll(TABLE_STORE_PLAYERS);
-      const winner = players.filter((player) => player.totalScore >= limitGameScore)
-        .sort((a, b) => b.totalScore - a.totalScore)[0];
-
-      if (winner) {
-        w = winner.name;
-
-        await db.put(TABLE_STORE_CONFIG, {
-          ...currentConfig,
-          winner: winner.name,
-        });
-      }
+      [winner] = players
+        .filter((player) => player.totalScore >= limitGameScore)
+        .sort((a, b) => b.totalScore - a.totalScore);
     }
 
-    if (type === GAMES.ROUND_LIMIT) {
-      if (currentConfig.currentRound > limitGameRounds) {
-        const players = await db.getAll(TABLE_STORE_PLAYERS);
-        const winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
-
-        w = winner.name;
-
-        await db.put(TABLE_STORE_CONFIG, {
-          ...currentConfig,
-          winner: winner.name,
-        });
-      }
+    if (type === GAMES.ROUND_LIMIT && config.currentRound > limitGameRounds) {
+      const players = await db.getAll(TABLE_STORE_PLAYERS);
+      winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
     }
 
-    if (type === GAMES.PLAYOFFS) {
-      if (currentConfig.currentRound > eliminatedPlayersByRound) {
-        const players = await db.getAll(TABLE_STORE_PLAYERS);
-        const winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
-
-        w = winner.name;
-
-        await db.put(TABLE_STORE_CONFIG, {
-          ...currentConfig,
-          winner: winner.name,
-        });
-      }
+    if (type === GAMES.PLAYOFFS && config.currentRound > eliminatedPlayersByRound) {
+      const players = await db.getAll(TABLE_STORE_PLAYERS);
+      winner = players.reduce((prev, current) => (prev.totalScore > current.totalScore ? prev : current));
     }
 
-    return w;
+    if (winner) {
+      await db.put(TABLE_STORE_CONFIG, {
+        ...config,
+        winner: winner.name,
+      });
+
+      return winner.name;
+    }
+
+    return '';
   }
 }

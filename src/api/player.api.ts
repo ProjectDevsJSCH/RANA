@@ -1,5 +1,5 @@
-import { PlayerInformation } from '@/components/players-list/player-information.interface';
 import { dbInstance } from '@/db/initializer';
+import { PlayerInformation } from '@/model/player-information.model';
 import { TABLE_STORE_CONFIG } from '@/model/tables/configuration.model';
 import { PlayerStore, TABLE_STORE_PLAYERS } from '@/model/tables/player.model';
 
@@ -42,16 +42,22 @@ export class PlayerApi {
     playerName: string,
   ): Promise<void> {
     const db = await dbInstance();
-    const player = await db.get(TABLE_STORE_PLAYERS, playerId);
-    const gamePlayerInfo = await db.getAll(TABLE_STORE_CONFIG);
+    const tx = db.transaction([TABLE_STORE_PLAYERS, TABLE_STORE_CONFIG], 'readwrite');
+    const playersStore = tx.objectStore(TABLE_STORE_PLAYERS);
+    const configStore = tx.objectStore(TABLE_STORE_CONFIG);
 
-    if (player) {
+    const player = await playersStore.get(playerId);
+    const allConfigs = await configStore.getAll();
+
+    if (player && allConfigs.length > 0) {
       player.name = playerName;
-      gamePlayerInfo[0].currentPlayer.name = playerName;
+      allConfigs[0].currentPlayer.name = playerName;
 
-      await db.put(TABLE_STORE_PLAYERS, player);
-      await db.put(TABLE_STORE_CONFIG, gamePlayerInfo[0]);
+      await playersStore.put(player);
+      await configStore.put(allConfigs[0]);
     }
+
+    await tx.done;
   }
 
   static async updatePlayerRoundScore(
@@ -60,8 +66,12 @@ export class PlayerApi {
     score: number,
   ): Promise<void> {
     const db = await dbInstance();
-    const player = await db.get(TABLE_STORE_PLAYERS, idPlayer);
-    const [gameState] = await db.getAll(TABLE_STORE_CONFIG);
+    const tx = db.transaction([TABLE_STORE_PLAYERS, TABLE_STORE_CONFIG], 'readwrite');
+    const playersStore = tx.objectStore(TABLE_STORE_PLAYERS);
+    const configStore = tx.objectStore(TABLE_STORE_CONFIG);
+
+    const player = await playersStore.get(idPlayer);
+    const allConfigs = await configStore.getAll();
 
     if (player?.name) {
       const playerRound = player.rounds.find((round) => round.number === idRound && round.played);
@@ -72,13 +82,15 @@ export class PlayerApi {
 
       player.totalScore = player.rounds.reduce((acc, round) => acc + round.score, 0);
 
-      await db.put(TABLE_STORE_PLAYERS, player);
+      await playersStore.put(player);
     }
 
-    if (gameState?.idConfig && gameState.currentPlayer.idPlayer === idPlayer) {
-      gameState!.currentPlayer = player!;
+    if (allConfigs.length > 0 && allConfigs[0].currentPlayer.idPlayer === idPlayer && player) {
+      allConfigs[0].currentPlayer = player;
 
-      await db.put(TABLE_STORE_CONFIG, gameState);
+      await configStore.put(allConfigs[0]);
     }
+
+    await tx.done;
   }
 }

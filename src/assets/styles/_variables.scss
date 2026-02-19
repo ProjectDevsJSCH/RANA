@@ -1,4 +1,20 @@
+// Core palette
 $dark: #131515;
 $contrast: #233329;
 $shadow: #b4bbbb;
 $base: #f7f6f3;
+
+// Accent — emerald/frog theme
+$accent: #10b981;
+$accent-dark: #059669;
+$accent-light: #d1fae5;
+$accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+// Feedback
+$error: #ef4444;
+$error-light: #fee2e2;
+
+// Shadows
+$shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+$shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+$shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.16);

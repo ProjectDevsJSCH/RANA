@@ -1,7 +1,7 @@
 <template>
   <div
     class="relative flex flex-col p-2 px-2 pb-10 mx-auto overflow-hidden cs__app"
-    :style="{ height: `${innerHeight}px` }"
+    :style="{ height: `${windowHeight}px` }"
   >
     <img
       :class="[homeView ? 'mt-40' : 'cs__app__logo--small', 'cs__app__logo mx-auto cursor-pointer']"
@@ -11,13 +11,22 @@
       @keypress="home"
     >
     <router-view v-slot="{Component}">
-      <component :is="Component" />
+      <transition name="slide" mode="out-in">
+        <component :is="Component" />
+      </transition>
     </router-view>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { dbInitializer } from './db/initializer';
@@ -28,7 +37,19 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const homeView = computed(() => route.name === 'HomeView');
-    const innerHeight = computed(() => window.innerHeight);
+    const windowHeight = ref(window.innerHeight);
+
+    const updateHeight = (): void => {
+      windowHeight.value = window.innerHeight;
+    };
+
+    onMounted(() => {
+      window.addEventListener('resize', updateHeight);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', updateHeight);
+    });
 
     onBeforeMount(async () => {
       await dbInitializer();
@@ -48,7 +69,7 @@ export default defineComponent({
       homeView,
       routeHome,
       home,
-      innerHeight,
+      windowHeight,
     };
   },
 });
@@ -68,17 +89,29 @@ export default defineComponent({
 
 .cs__app {
   max-width: 500px;
-  background-image: linear-gradient(180deg, rgba(100, 100, 100, 0.063) 0%, rgba(100, 100, 100, 0.165) 100%);
+  background: linear-gradient(
+    170deg,
+    rgba($accent, 0.04) 0%,
+    rgba($accent, 0.08) 35%,
+    rgba(100, 100, 100, 0.06) 70%,
+    rgba(100, 100, 100, 0.12) 100%
+  );
 
   &__logo {
     width: 120px;
     height: 120px;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 4px 8px rgba($accent-dark, 0.2));
+
+    &:hover {
+      filter: drop-shadow(0 6px 12px rgba($accent-dark, 0.3));
+      transform: scale(1.05);
+    }
 
     &--small {
       width: 60px;
       height: 60px;
-      transition: all 0.5s ease-in-out;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 }

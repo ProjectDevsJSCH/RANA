@@ -31,6 +31,7 @@
         v-if="mode === 'create'"
         class="block mx-auto mt-6 text-center"
         :disabled="disabled"
+        aria-label="Añadir nuevo jugador"
         @onClick="createPlayer"
       >
         <span>Añadir jugador</span>
@@ -39,6 +40,7 @@
         v-else
         class="block mx-auto mt-6 text-center"
         :disabled="disabled"
+        aria-label="Guardar edición del jugador"
         @onClick="updatePlayer"
       >
         <span>Editar jugador</span>
@@ -48,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import _, { uniqueId } from 'lodash';
+import { cloneDeep, uniqueId } from 'lodash';
 import {
   computed,
   defineComponent,
@@ -61,13 +63,12 @@ import {
 import draggable from 'vuedraggable';
 
 import { PlayerApi } from '@/api/player.api';
+import { PlayerInformation } from '@/model/player-information.model';
 import ButtonComponent from '@/ui-components/button-component/ButtonComponent.vue';
 import InputComponent from '@/ui-components/input-component/InputComponent.vue';
 import ModalComponent from '@/ui-components/modal-component/ModalComponent.vue';
 
 import PlayerCard from '../player-card/PlayerCard.vue';
-
-import { PlayerInformation } from './player-information.interface';
 
 export default defineComponent({
   name: 'PlayersList',
@@ -128,7 +129,10 @@ export default defineComponent({
     const updatePlayer = (): void => {
       if (state.currentPlayerName === '') return;
 
-      state.playerList.find((player) => player.idPlayer === state.idPlayerToEdit)!.name = state.currentPlayerName;
+      const player = state.playerList.find((p) => p.idPlayer === state.idPlayerToEdit);
+      if (player) {
+        player.name = state.currentPlayerName;
+      }
 
       onCloseModal();
     };
@@ -144,13 +148,13 @@ export default defineComponent({
       emit('onEdit');
     };
 
-    watch(() => _.cloneDeep(state.playerList), (newValue): void => {
+    watch(() => cloneDeep(state.playerList), (): void => {
       // reset positions before sending to parent
       state.playerList.forEach((player, index) => {
         player.position = index + 1;
       });
 
-      emit('onPlayerListChange', newValue);
+      emit('onPlayerListChange', state.playerList);
     });
 
     watch(() => props.showModal, (newValue): void => {
@@ -176,11 +180,11 @@ export default defineComponent({
 
 <style lang='scss' scoped>
 @import '@/assets/styles/variables';
-@import '@/assets/styles/mixins';
 
 .cs__players-list {
   height: 350px;
-  border: 1px solid $shadow;
+  border: 1.5px solid $shadow;
   background-color: $base;
+  border-radius: 20px;
 }
 </style>
